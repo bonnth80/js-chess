@@ -210,7 +210,7 @@ var pieces = {
          var foundEncroacher = false;
          var list = [];
 
-         // isolate pieces that match this row and column
+         // trim pieces that match this row and column
          for (var i = 0; i < pieceList.length; i++) {
             if (pieceList[i].coordinates[0] == posX
                || pieceList[i].coordinates[1] == posY)
@@ -340,6 +340,115 @@ var pieces = {
          }
 
          return list;
+      }
+   },
+   Bishop: {
+      type: "Bishop",
+      color: "black",
+      coordinates: [0,0],
+      timesMoved: 0,
+      getLegalMoves: function(pieceList = []) {
+         var pCoords;
+         var foundEncroacher = false;
+         var list = [];
+         // trim pieceList to valid pieces
+         var validList = [];
+
+         for (var i = 0; i < pieceList.length; i++) {
+            pCoords = pieceList[i].coordinates;
+            if (isDiag(pCoords, this.coordinates))
+               validList.push(pieceList[i]);
+         }
+
+         // check nw slope
+         for (var sq = [this.coordinates[0] - 1, this.coordinates[1] - 1];
+               sq[0] >= 0 && sq[1] >= 0;
+               sq = addCoords(sq,[-1,-1])) {
+            
+            for (var j = 0; j < validList.length; j++) {
+               pCoords = validList[j].coordinates;
+               if (compArrStrict(sq,pCoords)) {
+                  if (validList[j].color != this.color)
+                     list.push([sq]);
+                  foundEncroacher = true;
+                  break;
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else            
+               list.push([sq]);
+         }
+
+         // check ne slope
+         foundEncroacher = false;
+         for (var sq = [this.coordinates[0] + 1, this.coordinates[1] - 1];
+               sq[0] < 8 && sq[1] >= 0;
+               sq = addCoords(sq,[1, -1])) {
+            
+            for (var j = 0; j < validList.length; j++) {
+               pCoords = validList[j].coordinates;
+               if (compArrStrict(sq,pCoords)) {
+                  if (validList[j].color != this.color)
+                     list.push([sq]);
+                  foundEncroacher = true;
+                  break;
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else            
+               list.push([sq]);
+         }
+
+         // check se slope
+         foundEncroacher = false;
+         for (var sq = [this.coordinates[0] + 1, this.coordinates[1] + 1];
+               sq[0] < 8 && sq[1] < 8;
+               sq = addCoords(sq,[1, 1])) {
+            
+            for (var j = 0; j < validList.length; j++) {
+               pCoords = validList[j].coordinates;
+               if (compArrStrict(sq,pCoords)) {
+                  if (validList[j].color != this.color)
+                     list.push([sq]);
+                  foundEncroacher = true;
+                  break;
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else            
+               list.push([sq]);
+         }
+
+         // check sw slope
+         foundEncroacher = false;
+         for (var sq = [this.coordinates[0] - 1, this.coordinates[1] + 1];
+               sq[0] >= 0 && sq[1] < 8;
+               sq = addCoords(sq,[-1, 1])) {
+            
+            for (var j = 0; j < validList.length; j++) {
+               pCoords = validList[j].coordinates;
+               if (compArrStrict(sq,pCoords)) {
+                  if (validList[j].color != this.color)
+                     list.push([sq]);
+                  foundEncroacher = true;
+                  break;
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else            
+               list.push([sq]);
+         }
+
+         return list;
+
       }
    }
 }
@@ -566,4 +675,10 @@ var foo = [];
 foo[0] = {};
 Object.assign(foo[0], pieces.Rook);
 foo[0].color = "white";
-foo[0].coordinates = [1,2];
+foo[0].coordinates = [5,3];
+
+var bar = {};
+Object.assign(bar, pieces.Bishop);
+bar.coordinates = [4,4];
+
+
