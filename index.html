@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>JS Chess</title>
+
+   <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+<body>
+   <h1>js chess demo</h1>
+
+   <div id="chessBoard">
+      <table>
+         <tr id="rowLables">
+            <td class="tlBlank"></td>
+            <td class="boardFile label">A</td>
+            <td class="boardFile label">B</td>
+            <td class="boardFile label">C</td>
+            <td class="boardFile label">D</td>
+            <td class="boardFile label">E</td>
+            <td class="boardFile label">F</td>
+            <td class="boardFile label">G</td>
+            <td class="boardFile label">H</td>
+            <td class="trBlank"></td>
+         </tr>
+         <tr id="row8" class="boardWholeRow">
+            <td class="label boardRow">8</td>
+            <td class="square boardRow boardFile" id="r8-fileA"></td>
+            <td class="square boardRow boardFile" id="r8-fileB"></td>
+            <td class="square boardRow boardFile" id="r8-fileC"></td>
+            <td class="square boardRow boardFile" id="r8-fileD"></td>
+            <td class="square boardRow boardFile" id="r8-fileE"></td>
+            <td class="square boardRow boardFile" id="r8-fileF"></td>
+            <td class="square boardRow boardFile" id="r8-fileG"></td>
+            <td class="square boardRow boardFile" id="r8-fileH"></td>
+            <td class="label boardRow">8</td>
+         </tr>
+         <tr id="row7" class="boardWholeRow">
+            <td class="label boardRow">7</td>
+            <td class="square boardRow boardFile" id="r7-fileA"></td>
+            <td class="square boardRow boardFile" id="r7-fileB"></td>
+            <td class="square boardRow boardFile" id="r7-fileC"></td>
+            <td class="square boardRow boardFile" id="r7-fileD"></td>
+            <td class="square boardRow boardFile" id="r7-fileE"></td>
+            <td class="square boardRow boardFile" id="r7-fileF"></td>
+            <td class="square boardRow boardFile" id="r7-fileG"></td>
+            <td class="square boardRow boardFile" id="r7-fileH"></td>
+            <td class="label boardRow">7</td>
+         </tr>
+         <tr id="row6" class="boardWholeRow">
+            <td class="label boardRow">6</td>
+            <td class="square boardRow boardFile" id="r6-fileA"></td>
+            <td class="square boardRow boardFile" id="r6-fileB"></td>
+            <td class="square boardRow boardFile" id="r6-fileC"></td>
+            <td class="square boardRow boardFile" id="r6-fileD"></td>
+            <td class="square boardRow boardFile" id="r6-fileE"></td>
+            <td class="square boardRow boardFile" id="r6-fileF"></td>
+            <td class="square boardRow boardFile" id="r6-fileG"></td>
+            <td class="square boardRow boardFile" id="r6-fileH"></td>
+            <td class="label boardRow">6</td>
+         </tr>
+         <tr id="row5" class="boardWholeRow">
+            <td class="label boardRow">5</td>
+            <td class="square boardRow boardFile" id="r5-fileA"></td>
+            <td class="square boardRow boardFile" id="r5-fileB"></td>
+            <td class="square boardRow boardFile" id="r5-fileC"></td>
+            <td class="square boardRow boardFile" id="r5-fileD"></td>
+            <td class="square boardRow boardFile" id="r5-fileE"></td>
+            <td class="square boardRow boardFile" id="r5-fileF"></td>
+            <td class="square boardRow boardFile" id="r5-fileG"></td>
+            <td class="square boardRow boardFile" id="r5-fileH"></td>
+            <td class="label boardRow">5</td>
+         </tr>
+         <tr id="row4" class="boardWholeRow">
+            <td class="label boardRow">4</td>
+            <td class="square boardRow boardFile" id="r4-fileA"></td>
+            <td class="square boardRow boardFile" id="r4-fileB"></td>
+            <td class="square boardRow boardFile" id="r4-fileC"></td>
+            <td class="square boardRow boardFile" id="r4-fileD"></td>
+            <td class="square boardRow boardFile" id="r4-fileE"></td>
+            <td class="square boardRow boardFile" id="r4-fileF"></td>
+            <td class="square boardRow boardFile" id="r4-fileG"></td>
+            <td class="square boardRow boardFile" id="r4-fileH"></td>
+            <td class="label boardRow">4</td>
+         </tr>
+         <tr id="row3" class="boardWholeRow">
+            <td class="label boardRow">3</td>
+            <td class="square boardRow boardFile" id="r3-fileA"></td>
+            <td class="square boardRow boardFile" id="r3-fileB"></td>
+            <td class="square boardRow boardFile" id="r3-fileC"></td>
+            <td class="square boardRow boardFile" id="r3-fileD"></td>
+            <td class="square boardRow boardFile" id="r3-fileE"></td>
+            <td class="square boardRow boardFile" id="r3-fileF"></td>
+            <td class="square boardRow boardFile" id="r3-fileG"></td>
+            <td class="square boardRow boardFile" id="r3-fileH"></td>
+            <td class="label boardRow">3</td>
+         </tr>
+         <tr id="row2" class="boardWholeRow">
+            <td class="label boardRow">2</td>
+            <td class="square boardRow boardFile" id="r2-fileA"></td>
+            <td class="square boardRow boardFile" id="r2-fileB"></td>
+            <td class="square boardRow boardFile" id="r2-fileC"></td>
+            <td class="square boardRow boardFile" id="r2-fileD"></td>
+            <td class="square boardRow boardFile" id="r2-fileE"></td>
+            <td class="square boardRow boardFile" id="r2-fileF"></td>
+            <td class="square boardRow boardFile" id="r2-fileG"></td>
+            <td class="square boardRow boardFile" id="r2-fileH"></td>
+            <td class="label boardRow">2</td>
+         </tr>
+         <tr id="row1" class="boardWholeRow">
+            <td class="label boardRow">1</td>
+            <td class="square boardRow boardFile" id="r1-fileA"></td>
+            <td class="square boardRow boardFile" id="r1-fileB"></td>
+            <td class="square boardRow boardFile" id="r1-fileC"></td>
+            <td class="square boardRow boardFile" id="r1-fileD"></td>
+            <td class="square boardRow boardFile" id="r1-fileE"></td>
+            <td class="square boardRow boardFile" id="r1-fileF"></td>
+            <td class="square boardRow boardFile" id="r1-fileG"></td>
+            <td class="square boardRow boardFile" id="r1-fileH"></td>
+            <td class="label boardRow">1</td>
+         </tr>
+         <tr id="rowLables">
+            <td class="tlBlank"></td>
+            <td class="boardFile label">A</td>
+            <td class="boardFile label">B</td>
+            <td class="boardFile label">C</td>
+            <td class="boardFile label">D</td>
+            <td class="boardFile label">E</td>
+            <td class="boardFile label">F</td>
+            <td class="boardFile label">G</td>
+            <td class="boardFile label">H</td>
+            <td class="trBlank"></td>
+         </tr>
+      </table>
+   </div>
+   
+   <script src="domObjects.js"></script>
+   <script src="jschess.js"></script>
+</body>
+</html>

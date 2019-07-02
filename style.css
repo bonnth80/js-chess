@@ -1,0 +1,42 @@
+h1 {
+   font-family: sans-serif;
+   color: red;
+   text-align: center;
+}
+
+table {
+   margin-left: auto;
+   margin-right: auto;
+   border-collapse: collapse;
+}
+
+.square {
+   border: 1px solid blue;
+   font-size: 36px;
+   text-align: center;
+}
+
+.boardWholeRow:nth-of-type(odd) .square:nth-of-type(even),
+.boardWholeRow:nth-of-type(even) .square:nth-of-type(odd) {
+   background-color: #AAA;
+}
+
+.square:hover {
+   background-color: rgb(27, 216, 230) !important;
+   cursor: pointer;
+}
+
+.boardRow {
+   height: 46px;
+}
+
+.boardFile {
+   width: 46px;
+}
+
+.label{
+   text-align: center;
+   font-size: 16px;
+   font-family: sans-serif;
+   font-weight: bold;
+}
