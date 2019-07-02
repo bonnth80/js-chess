@@ -88,66 +88,211 @@ var chessController = {
    ],
    pieceList: [],
    settings: {
-      whitePieceColor: "#DDF",
+      whitePieceColor: "#EAE5CA",
       blackPieceColor: "#400",
-      whiteSquareColor: "#AAD",
-      blackSquareColor: "#744"
+      whiteSquareColor: "#9898CC",
+      blackSquareColor: "#824848"
    },
    move: 0,
-   turn: 0
+   ply: 0
 }
 
 var pieces = {
+   Pawn: {
+      type: "Pawn",
+      color: "black",
+      coordinates: [0,1],
+      moveTwoAtPly: -1,
+      getLegalMoves: function(pieceList = []) {
+         var list = [];
+         var posX = this.coordinates[0];
+         var posY = this.coordinates[1];
+         var encroacherFound = false;
+         var dEncroacherFound = false;
+         var firstMove = ((this.color == "black" && this.coordinates[1] == 1)
+                        || (this.color == "white" && this.coordinates[1] == 6));
+         var pCoords;
+         var pColor;
+
+         if (this.color == "black") {
+            // check for straight move encroachers
+            for (var i = 0; i < pieceList.length; i++) {
+               pCoords = pieceList[i].coordinates;
+               if (compArrStrict(pCoords, [posX, posY + 1]))
+                  encroacherFound = true;
+
+               if (compArrStrict(pCoords, [posX, posY + 2]))
+                  dEncroacherFound = true;
+            }
+
+            if (!encroacherFound){
+               list.push([posX, 2]);
+               if (firstMove && !dEncroacherFound)
+                  list.push([posX, 3]);
+            }
+
+            // check for diagonal captures
+            for (var i = 0; i < pieceList.length; i++) {
+               pCoords = pieceList[i].coordinates;
+               pColor = pieceList[i].color;
+
+               if (pColor == "white") {
+                  if (compArrStrict(pCoords, [posX - 1, posY + 1]))
+                     list.push([posX - 1, posY + 1]);
+                  if (compArrStrict(pCoords, [posX +1, posY +1]))
+                     list.push([posX + 1, posY + 1]);
+
+                  // check en passant
+                  if (posY == 4
+                     && pieceList[i].type == "Pawn"
+                     && pieceList[i].moveTwoAtPly == chessController.ply - 1) {
+                        if (pCoords[1] == posX - 1)
+                           list.push([posX - 1, posY + 1]);
+                        if (pCoords[1] == posX + 1)
+                           list.push([posX + 1, posY + 1]);
+                     }
+               }
+            }
+         }
+         else { // pawn is white
+            // check for straight move encroachers
+            for (var i = 0; i < pieceList.length; i++) {
+               pCoords = pieceList[i].coordinates;
+               if (compArrStrict(pCoords, [posX, posY - 1]))
+                  encroacherFound = true;
+
+               if (compareArrStrict(pCoords, [posX, posY - 2]))
+                  dEncroacherFound = true;
+            }
+
+            if (!encroacherFound){
+               list.push([posX, 5]);
+               if (firstMove && !dEncroacherFound)
+                  list.push([posX, 4]);
+            }
+
+            // check for diagonal captures
+            for (var i = 0; i < pieceList.length; i++) {
+               pColor = pieceList[i].color;
+               pCoords = pieceList[i].coordinates;
+               if (pieceList[i].color == "black") {
+                  if (compareArrStrict(pCoords, [posX - 1, posY - 1]))
+                     list.push([posX - 1, posY - 1]);
+                  if (compareArrStrict(pCoords, [posX + 1, posY - 1]))
+                     list.push([posX + 1, posY - 1]);
+
+                  // check en passant
+                  if (posY == 4
+                     && pieceList[i].type == "Pawn"
+                     && pieceList[i].moveTwoAtPlay == chessController.ply - 1) {
+                        if (pieceList[i].coordinates[1] == posX - 1)
+                           list.push([posX - 1, posY - 1]);
+                        if (pieceList[i].coordinates[1] == posX + 1)
+                           list.push([posX + 1, posY - 1]);
+                     }
+               }
+            }
+         }
+
+         return list;
+      }
+   },
    Rook: {
       type: "Rook",
       color: "black",
       coordinates: [0,0],
       timesMoved: 0,
       hasCastled: false,
-      getLegalMoves: (pieceList)=>{
+      getLegalMoves: function (pieceList = []) {
          var posX = this.coordinates[0];
          var posY = this.coordinates[1];
-
+         var validPieces = [];
+         var foundEncroacher = false;
          var list = [];
 
-         // check row and add cells
-         for (var x = 0; x < 8; x++) {
-            if (x != posX) {
-               pieceList.forEach((element)=>{
-                  if (element.coordinates == [x,posY]) {
-                     if (element.color == this.color) {
-                        break;
-                     }
-                     else {
-                        list.push([x,posY]);
-                        break;
-                     }                  
-                  }
-                  else {
-                     list.push([x,posY]);
-                  }
-               })
-            }            
+         // isolate pieces that match this row and column
+         for (var i = 0; i < pieceList.length; i++) {
+            if (pieceList[i].coordinates[0] == posX
+               || pieceList[i].coordinates[1] == posY)
+            validPieces.push(pieceList[i]);
          }
 
-         // check column and add cells
-         for (var y = 0; y < 8; y++) {
-            if (y != posY) {
-               pieceList.forEach((element)=>{
-                  if (element.coordinates == [posX, y]) {
-                     if (element.color == this.color) {
-                        break;
-                     }
-                     else {
-                        list.push([posX, y]);
-                        break;
-                     }                  
+         // check left squares and add squares
+         for (var i = posX - 1; i >= 0; i--) {
+            for (var j = 0; j < validPieces.length; i++) {
+               if (validPieces[j].coordinates[1] == posY) {
+                  if (validPieces[j].coordinatesp[0] == i) {
+                     if (validPieces[j].color != this.color)
+                        list.push([i,posY]);
+                     foundEncroacher = true;
+                     break;
                   }
-                  else {
-                     list.push([posX, y]);
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else            
+               list.push([i,posY]);
+         }
+
+         // check right square and add squares
+         foundEncroacher = false;
+         for (var i = posX + 1; i < 8; i++) {
+            for (var j = 0; j < validPieces.length; i++) {
+               if (validPieces[j].coordinates[1] == posY) {
+                  if (validPieces[j].coordinatesp[0] == i) {
+                     if (validPieces[j].color != this.color)
+                        list.push([i,posY]);
+                     foundEncroacher = true;
+                     break;
                   }
-               })
-            }            
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else               
+               list.push([i,posY]);
+         }
+
+         // check upper column and add add squares
+         foundEncroacher = false;
+         for (var i = posY - 1; i >= 0; i--) {
+            for (var j = 0; j < validPieces.length; i++) {
+               if (validPieces[j].coordinates[0] == posX) {
+                  if (validPieces[j].coordinatesp[1] == i) {
+                     if (validPieces[j].color != this.color)
+                        list.push([posX,i]);
+                     foundEncroacher = true;
+                     break;
+                  }
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else
+               list.push([posX,i]);
+         }
+
+         // check lower column and add add squares
+         foundEncroacher = false;
+         for (var i = posY + 1; i < 8; i++) {
+            for (var j = 0; j < validPieces.length; i++) {
+               if (validPieces[j].coordinates[0] == posX) {
+                  if (validPieces[j].coordinatesp[1] == i) {
+                     if (validPieces[j].color != this.color)
+                        list.push([posX,i]);
+                     foundEncroacher = true;
+                     break;
+                  }
+               }
+            }
+            if (foundEncroacher)
+               break;
+            else               
+               list.push([posX,i]);
          }
 
          return list;
@@ -158,7 +303,7 @@ var pieces = {
       color: "black",
       coordinates: [0,0],
       timesMoved: 0,
-      getLegalMoves: function (pieceList) {
+      getLegalMoves: function (pieceList = []) {
          var posX = this.coordinates[0];
          var posY = this.coordinates[1];
 
@@ -173,28 +318,24 @@ var pieces = {
             [posX - 1, posY - 2]    // NNW
          ];
 
+         var unencroachedList = [];
+
          // check for out-of-bounds and remove from list
-         for (var i = 0; i < list.length; i++) {
+         for (var i = list.length - 1; i >= 0; i--) {
             if (  list[i][0] < 0
                || list[i][0] > 7
-               || list[i][1] < 0
+               || list[i][1] > 0
                || list[i][1] > 7) {
-                  list.splice(i-- - 1, 1);
+                  list.splice(i,1);
                }
          }
 
          // check for encroachers and remove from list
-         for (var i = 0; i < pieceList.length; i++) {
-            for (var j = 0; j < list.length; j++) {
-               if (pieceList[i].coordinates == list[j]) {
-                  list[j].push(99); // sentinel mark for removal
-               }
-            }
-         }
-
-         for (var i = 0; i < list.length; i++) {
-            if (list[i].length == 3){
-               list.splice( i-- - 1, 1);
+         for (var i = list.length - 1; i >= 0; i--) {
+            for (var j = 0; j < pieceList.length; j++) {
+               if (pieceList[j].color == this.color
+                  && compArrStrict(pieceList[j].coordinates, list[i]))
+                  list.splice(i,1);
             }
          }
 
@@ -208,117 +349,104 @@ chessController.pieceList[0] = {};
 Object.assign(chessController.pieceList[0], pieces.Rook);
 chessController.pieceList[1] = {};
 
-
 var pStrings = {
    whitePieces: {
-      Pawn: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
-      Rook: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-rook\"></i></span>",
-      Knight: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-knight\"></i></span>",
-      Bishop: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
-      Queen: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-queen\"></i></span>",
-      King: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-king\"></i></span>"
+      Pawn: "<span style=\"color: " + chessController.settings.whitePieceColor
+         + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
+      Rook: "<span style=\"color: " + chessController.settings.whitePieceColor
+         + "\"><i class=\"fas fa-chess-rook\"></i></span>",
+      Knight: "<span style=\"color: " + chessController.settings.whitePieceColor
+         + "\"><i class=\"fas fa-chess-knight\"></i></span>",
+      Bishop: "<span style=\"color: " + chessController.settings.whitePieceColor
+         + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
+      Queen: "<span style=\"color: " + chessController.settings.whitePieceColor
+         + "\"><i class=\"fas fa-chess-queen\"></i></span>",
+      King: "<span style=\"color: " + chessController.settings.whitePieceColor
+         + "\"><i class=\"fas fa-chess-king\"></i></span>"
    },
    blackPieces: {
-      Pawn: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
-      Rook: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-rook\"></i></span>",
-      Knight: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-knight\"></i></span>",
-      Bishop: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
-      Queen: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-queen\"></i></span>",
-      King: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-king\"></i</span>"
+      Pawn: "<span style=\"color: " + chessController.settings.blackPieceColor
+         + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
+      Rook: "<span style=\"color: " + chessController.settings.blackPieceColor
+         + "\"><i class=\"fas fa-chess-rook\"></i></span>",
+      Knight: "<span style=\"color: " + chessController.settings.blackPieceColor
+         + "\"><i class=\"fas fa-chess-knight\"></i></span>",
+      Bishop: "<span style=\"color: " + chessController.settings.blackPieceColor
+         + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
+      Queen: "<span style=\"color: " + chessController.settings.blackPieceColor
+         + "\"><i class=\"fas fa-chess-queen\"></i></span>",
+      King: "<span style=\"color: " + chessController.settings.blackPieceColor
+         + "\"><i class=\"fas fa-chess-king\"></i</span>"
    },
    updateSettings: (x = this) => {
       pStrings.whitePieces = {
-         Pawn: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
-         Rook: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-rook\"></i></span>",
-         Knight: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-knight\"></i></span>",
-         Bishop: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
-         Queen: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-queen\"></i></span>",
-         King: "<span style=\"color: " + chessController.settings.whitePieceColor + "\"><i class=\"fas fa-chess-king\"></i</span>"
+         Pawn: "<span style=\"color: "
+            + chessController.settings.whitePieceColor
+            + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
+         Rook: "<span style=\"color: "
+            + chessController.settings.whitePieceColor
+            + "\"><i class=\"fas fa-chess-rook\"></i></span>",
+         Knight: "<span style=\"color: "
+            + chessController.settings.whitePieceColor
+            + "\"><i class=\"fas fa-chess-knight\"></i></span>",
+         Bishop: "<span style=\"color: "
+            + chessController.settings.whitePieceColor
+            + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
+         Queen: "<span style=\"color: "
+            + chessController.settings.whitePieceColor
+            + "\"><i class=\"fas fa-chess-queen\"></i></span>",
+         King: "<span style=\"color: "
+            + chessController.settings.whitePieceColor
+            + "\"><i class=\"fas fa-chess-king\"></i</span>"
       };
 
       pStrings.blackPieces = {
-         Pawn: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
-         Rook: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-rook\"></i></span>",
-         Knight: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-knight\"></i></span>",
-         Bishop: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
-         Queen: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-queen\"></i></span>",
-         King: "<span style=\"color: " + chessController.settings.blackPieceColor + "\"><i class=\"fas fa-chess-king\"></i</span>"
+         Pawn: "<span style=\"color: "
+            + chessController.settings.blackPieceColor
+            + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
+         Rook: "<span style=\"color: "
+            + chessController.settings.blackPieceColor
+            + "\"><i class=\"fas fa-chess-rook\"></i></span>",
+         Knight: "<span style=\"color: "
+            + chessController.settings.blackPieceColor
+            + "\"><i class=\"fas fa-chess-knight\"></i></span>",
+         Bishop: "<span style=\"color: "
+            + chessController.settings.blackPieceColor
+            + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
+         Queen: "<span style=\"color: "
+            + chessController.settings.blackPieceColor
+            + "\"><i class=\"fas fa-chess-queen\"></i></span>",
+         King: "<span style=\"color: "
+            + chessController.settings.blackPieceColor
+            + "\"><i class=\"fas fa-chess-king\"></i</span>"
       };
    }
 }
 
 var coords = {
-   A1: "A1",
-   A2: "A2",
-   A3: "A3",
-   A4: "A4",
-   A5: "A5",
-   A6: "A6",
-   A7: "A7",
-   A8: "A8",
+   A1: "A1", A2: "A2", A3: "A3", A4: "A4",
+   A5: "A5", A6: "A6", A7: "A7", A8: "A8",
 
-   B1: "B1",
-   B2: "B2",
-   B3: "B3",
-   B4: "B4",
-   B5: "B5",
-   B6: "B6",
-   B7: "B7",
-   B8: "B8",
+   B1: "B1", B2: "B2", B3: "B3", B4: "B4",
+   B5: "B5", B6: "B6", B7: "B7", B8: "B8",
    
-   C1: "C1",
-   C2: "C2",
-   C3: "C3",
-   C4: "C4",
-   C5: "C5",
-   C6: "C6",
-   C7: "C7",
-   C8: "C8",
+   C1: "C1", C2: "C2", C3: "C3", C4: "C4",
+   C5: "C5", C6: "C6", C7: "C7", C8: "C8",
    
-   D1: "D1",
-   D2: "D2",
-   D3: "D3",
-   D4: "D4",
-   D5: "D5",
-   D6: "D6",
-   D7: "D7",
-   D8: "D8",
+   D1: "D1", D2: "D2", D3: "D3", D4: "D4",
+   D5: "D5", D6: "D6", D7: "D7", D8: "D8",
    
-   E1: "E1",
-   E2: "E2",
-   E3: "E3",
-   E4: "E4",
-   E5: "E5",
-   E6: "E6",
-   E7: "E7",
-   E8: "E8",
+   E1: "E1", E2: "E2", E3: "E3", E4: "E4",
+   E5: "E5", E6: "E6", E7: "E7", E8: "E8",
    
-   F1: "F1",
-   F2: "F2",
-   F3: "F3",
-   F4: "F4",
-   F5: "F5",
-   F6: "F6",
-   F7: "F7",
-   F8: "F8",
+   F1: "F1", F2: "F2", F3: "F3", F4: "F4",
+   F5: "F5", F6: "F6", F7: "F7", F8: "F8",
    
-   G1: "G1",
-   G2: "G2",
-   G3: "G3",
-   G4: "G4",
-   G5: "G5",
-   G6: "G6",
-   G7: "G7",
-   G8: "G8",
+   G1: "G1", G2: "G2", G3: "G3", G4: "G4",
+   G5: "G5", G6: "G6", G7: "G7", G8: "G8",
    
-   H1: "H1",
-   H2: "H2",
-   H3: "H3",
-   H4: "H4",
-   H5: "H5",
-   H6: "H6",
-   H7: "H7",
-   H8: "H8"
+   H1: "H1", H2: "H2", H3: "H3", H4: "H4",
+   H5: "H5", H6: "H6", H7: "H7", H8: "H8"
 }
 
 function updateBoardPieces (layout = chessController.squares) {
@@ -397,8 +525,14 @@ function addPiece(sqCoords, piece, color) {
 }
 
 function updateBoardSquares (settings = chessController.settings) {
-   var darkSquares = document.querySelectorAll(".boardWholeRow:nth-of-type(odd) .square:nth-of-type(even), .boardWholeRow:nth-of-type(even) .square:nth-of-type(odd)");
-   var lightSquares = document.querySelectorAll(".boardWholeRow:nth-of-type(odd) .square:nth-of-type(odd), .boardWholeRow:nth-of-type(even) .square:nth-of-type(even)");
+   var darkSquares = document.querySelectorAll(
+         ".boardWholeRow:nth-of-type(odd) .square:nth-of-type(even),"
+         + ".boardWholeRow:nth-of-type(even) .square:nth-of-type(odd)"
+      );
+   var lightSquares = document.querySelectorAll(
+         ".boardWholeRow:nth-of-type(odd) .square:nth-of-type(odd),"
+         + ".boardWholeRow:nth-of-type(even) .square:nth-of-type(even)"
+      );
 
    for (var i = 0; i < darkSquares.length; i++)
       darkSquares[i].style.backgroundColor = settings.blackSquareColor;
@@ -427,3 +561,9 @@ function activateSquare (square) {
 }
 
 refreshBoard();
+
+var foo = [];
+foo[0] = {};
+Object.assign(foo[0], pieces.Rook);
+foo[0].color = "white";
+foo[0].coordinates = [1,2];
