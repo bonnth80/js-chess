@@ -206,7 +206,7 @@ var pieces = {
       getLegalMoves: function (pieceList = []) {
          var posX = this.coordinates[0];
          var posY = this.coordinates[1];
-         var validPieces = [];
+         var validList = [];
          var foundEncroacher = false;
          var list = [];
 
@@ -214,15 +214,15 @@ var pieces = {
          for (var i = 0; i < pieceList.length; i++) {
             if (pieceList[i].coordinates[0] == posX
                || pieceList[i].coordinates[1] == posY)
-            validPieces.push(pieceList[i]);
+            validList.push(pieceList[i]);
          }
 
          // check left squares and add squares
          for (var i = posX - 1; i >= 0; i--) {
-            for (var j = 0; j < validPieces.length; i++) {
-               if (validPieces[j].coordinates[1] == posY) {
-                  if (validPieces[j].coordinatesp[0] == i) {
-                     if (validPieces[j].color != this.color)
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[1] == posY) {
+                  if (validList[j].coordinatesp[0] == i) {
+                     if (validList[j].color != this.color)
                         list.push([i,posY]);
                      foundEncroacher = true;
                      break;
@@ -239,10 +239,10 @@ var pieces = {
          // check right square and add squares
          foundEncroacher = false;
          for (var i = posX + 1; i < 8; i++) {
-            for (var j = 0; j < validPieces.length; i++) {
-               if (validPieces[j].coordinates[1] == posY) {
-                  if (validPieces[j].coordinatesp[0] == i) {
-                     if (validPieces[j].color != this.color)
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[1] == posY) {
+                  if (validList[j].coordinatesp[0] == i) {
+                     if (validList[j].color != this.color)
                         list.push([i,posY]);
                      foundEncroacher = true;
                      break;
@@ -259,10 +259,10 @@ var pieces = {
          // check upper column and add add squares
          foundEncroacher = false;
          for (var i = posY - 1; i >= 0; i--) {
-            for (var j = 0; j < validPieces.length; i++) {
-               if (validPieces[j].coordinates[0] == posX) {
-                  if (validPieces[j].coordinatesp[1] == i) {
-                     if (validPieces[j].color != this.color)
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[0] == posX) {
+                  if (validList[j].coordinatesp[1] == i) {
+                     if (validList[j].color != this.color)
                         list.push([posX,i]);
                      foundEncroacher = true;
                      break;
@@ -279,10 +279,10 @@ var pieces = {
          // check lower column and add add squares
          foundEncroacher = false;
          for (var i = posY + 1; i < 8; i++) {
-            for (var j = 0; j < validPieces.length; i++) {
-               if (validPieces[j].coordinates[0] == posX) {
-                  if (validPieces[j].coordinatesp[1] == i) {
-                     if (validPieces[j].color != this.color)
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[0] == posX) {
+                  if (validList[j].coordinatesp[1] == i) {
+                     if (validList[j].color != this.color)
                         list.push([posX,i]);
                      foundEncroacher = true;
                      break;
@@ -369,7 +369,7 @@ var pieces = {
                pCoords = validList[j].coordinates;
                if (compArrStrict(sq,pCoords)) {
                   if (validList[j].color != this.color)
-                     list.push([sq]);
+                     list.push(sq);
                   foundEncroacher = true;
                   break;
                }
@@ -378,7 +378,7 @@ var pieces = {
             if (foundEncroacher)
                break;
             else            
-               list.push([sq]);
+               list.push(sq);
          }
 
          // check ne slope
@@ -391,7 +391,7 @@ var pieces = {
                pCoords = validList[j].coordinates;
                if (compArrStrict(sq,pCoords)) {
                   if (validList[j].color != this.color)
-                     list.push([sq]);
+                     list.push(sq);
                   foundEncroacher = true;
                   break;
                }
@@ -400,7 +400,7 @@ var pieces = {
             if (foundEncroacher)
                break;
             else            
-               list.push([sq]);
+               list.push(sq);
          }
 
          // check se slope
@@ -413,7 +413,7 @@ var pieces = {
                pCoords = validList[j].coordinates;
                if (compArrStrict(sq,pCoords)) {
                   if (validList[j].color != this.color)
-                     list.push([sq]);
+                     list.push(sq);
                   foundEncroacher = true;
                   break;
                }
@@ -422,7 +422,7 @@ var pieces = {
             if (foundEncroacher)
                break;
             else            
-               list.push([sq]);
+               list.push(sq);
          }
 
          // check sw slope
@@ -435,7 +435,7 @@ var pieces = {
                pCoords = validList[j].coordinates;
                if (compArrStrict(sq,pCoords)) {
                   if (validList[j].color != this.color)
-                     list.push([sq]);
+                     list.push(sq);
                   foundEncroacher = true;
                   break;
                }
@@ -444,11 +444,206 @@ var pieces = {
             if (foundEncroacher)
                break;
             else            
-               list.push([sq]);
+               list.push(sq);
          }
 
          return list;
 
+      }
+   },
+   Queen: {
+      type: "Queen",
+      color: "black",
+      coordinates: [0,0],
+      timesMoved: 0,
+      getLegalMoves: function(pieceList = []) {
+         var posX = this.coordinates[0];
+         var posY = this.coordinates[1];
+         var validList = [];
+         var foundEncroacher = false;
+         var list = [];
+
+         // trim pieces to valid
+         for (var i = 0; i < pieceList.length; i++) {
+            pCoords = pieceList[i].coordinates;
+            if (isDiag(pCoords, this.coordinates))
+               validList.push(pieceList[i]);
+         }
+
+         for (var i = 0; i < pieceList.length; i++) {
+            if (pieceList[i].coordinates[0] == posX
+               || pieceList[i].coordinates[1] == posY)
+            validList.push(pieceList[i]);
+         }
+
+         // Diagonal
+         // check nw slope
+         for (var sq = [this.coordinates[0] - 1, this.coordinates[1] - 1];
+            sq[0] >= 0 && sq[1] >= 0;
+            sq = addCoords(sq,[-1,-1])) {
+         
+         for (var j = 0; j < validList.length; j++) {
+            pCoords = validList[j].coordinates;
+            if (compArrStrict(sq,pCoords)) {
+               if (validList[j].color != this.color)
+                  list.push(sq);
+               foundEncroacher = true;
+               break;
+            }
+         }
+
+         if (foundEncroacher)
+            break;
+         else            
+            list.push(sq);
+      }
+
+      // check ne slope
+      foundEncroacher = false;
+      for (var sq = [this.coordinates[0] + 1, this.coordinates[1] - 1];
+            sq[0] < 8 && sq[1] >= 0;
+            sq = addCoords(sq,[1, -1])) {
+         
+         for (var j = 0; j < validList.length; j++) {
+            pCoords = validList[j].coordinates;
+            if (compArrStrict(sq,pCoords)) {
+               if (validList[j].color != this.color)
+                  list.push(sq);
+               foundEncroacher = true;
+               break;
+            }
+         }
+
+         if (foundEncroacher)
+            break;
+         else            
+            list.push(sq);
+      }
+
+      // check se slope
+      foundEncroacher = false;
+      for (var sq = [this.coordinates[0] + 1, this.coordinates[1] + 1];
+            sq[0] < 8 && sq[1] < 8;
+            sq = addCoords(sq,[1, 1])) {
+         
+         for (var j = 0; j < validList.length; j++) {
+            pCoords = validList[j].coordinates;
+            if (compArrStrict(sq,pCoords)) {
+               if (validList[j].color != this.color)
+                  list.push(sq);
+               foundEncroacher = true;
+               break;
+            }
+         }
+
+         if (foundEncroacher)
+            break;
+         else            
+            list.push(sq);
+      }
+
+      // check sw slope
+      foundEncroacher = false;
+      for (var sq = [this.coordinates[0] - 1, this.coordinates[1] + 1];
+            sq[0] >= 0 && sq[1] < 8;
+            sq = addCoords(sq,[-1, 1])) {
+         
+         for (var j = 0; j < validList.length; j++) {
+            pCoords = validList[j].coordinates;
+            if (compArrStrict(sq,pCoords)) {
+               if (validList[j].color != this.color)
+                  list.push(sq);
+               foundEncroacher = true;
+               break;
+            }
+         }
+
+         if (foundEncroacher)
+            break;
+         else            
+            list.push(sq);
+      }
+
+      // Lateral
+      // check left squares
+         for (var i = posX - 1; i >= 0; i--) {
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[1] == posY) {
+                  if (validList[j].coordinatesp[0] == i) {
+                     if (validList[j].color != this.color)
+                        list.push([i,posY]);
+                     foundEncroacher = true;
+                     break;
+                  }
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else            
+               list.push([i,posY]);
+         }
+
+         // check right squarse and add squares
+         foundEncroacher = false;
+         for (var i = posX + 1; i < 8; i++) {
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[1] == posY) {
+                  if (validList[j].coordinatesp[0] == i) {
+                     if (validList[j].color != this.color)
+                        list.push([i,posY]);
+                     foundEncroacher = true;
+                     break;
+                  }
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else               
+               list.push([i,posY]);
+         }
+
+         // check upper column and add add squares
+         foundEncroacher = false;
+         for (var i = posY - 1; i >= 0; i--) {
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[0] == posX) {
+                  if (validList[j].coordinatesp[1] == i) {
+                     if (validList[j].color != this.color)
+                        list.push([posX,i]);
+                     foundEncroacher = true;
+                     break;
+                  }
+               }
+            }
+
+            if (foundEncroacher)
+               break;
+            else
+               list.push([posX,i]);
+         }
+
+         // check lower column and add add squares
+         foundEncroacher = false;
+         for (var i = posY + 1; i < 8; i++) {
+            for (var j = 0; j < validList.length; j++) {
+               if (validList[j].coordinates[0] == posX) {
+                  if (validList[j].coordinatesp[1] == i) {
+                     if (validList[j].color != this.color)
+                        list.push([posX,i]);
+                     foundEncroacher = true;
+                     break;
+                  }
+               }
+            }
+            if (foundEncroacher)
+               break;
+            else               
+               list.push([posX,i]);
+         }
+
+         return list;
       }
    }
 }
@@ -669,6 +864,13 @@ function activateSquare (square) {
 
 }
 
+function highLightSquares(squareList = [], color = "#AA0") {
+   squareList.forEach((element)=>{
+      var docSquare = document.getElementById(coordsToDomId(element));
+      docSquare.style.backgroundColor = color;
+   });
+}
+
 refreshBoard();
 
 var foo = [];
@@ -678,7 +880,7 @@ foo[0].color = "white";
 foo[0].coordinates = [5,3];
 
 var bar = {};
-Object.assign(bar, pieces.Bishop);
+Object.assign(bar, pieces.Queen);
 bar.coordinates = [4,4];
 
 

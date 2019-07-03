@@ -61,3 +61,10 @@ function euclidGCD(x,y) {
    else
       return euclidGCD(y, x % y);
 }
+
+function coordsToDomId(coords = [0,0]) {
+   var fileList = ["A","B","C","D","E","F","G","H"]
+   var rankList = ["8","7","6","5","4","3","2","1"];
+   //r8-fileA
+   return "r" + rankList[coords[1]] + "-file" + fileList[coords[0]];
+}
