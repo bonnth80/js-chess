@@ -1,91 +1,9 @@
 console.log("jschess.js: connected")
 
-// ply: an by a single player wherein they make a play
+// ply: an action by a single player wherein they make a play
 // move: a set two plies, wherein each player makes their play
 
 var chessController = {
-   squares: [
-      [         
-         {coordinates: "A8", piece: "Rook", color: "black"},
-         {coordinates: "A7", piece: "Pawn", color: "black"},
-         {coordinates: "A6", piece: "", color: ""},
-         {coordinates: "A5", piece: "", color: ""},
-         {coordinates: "A4", piece: "", color: ""},
-         {coordinates: "A3", piece: "", color: ""},
-         {coordinates: "A2", piece: "Pawn", color: "white"},
-         {coordinates: "A1", piece: "Rook", color: "white"},
-      ],
-      [         
-         {coordinates: "B8", piece: "Knight", color: "black"},
-         {coordinates: "B7", piece: "Pawn", color: "black"},
-         {coordinates: "B6", piece: "", color: ""},
-         {coordinates: "B5", piece: "", color: ""},
-         {coordinates: "B4", piece: "", color: ""},
-         {coordinates: "B3", piece: "", color: ""},
-         {coordinates: "B2", piece: "Pawn", color: "white"},
-         {coordinates: "B1", piece: "Knight", color: "white"},
-      ],
-      [         
-         {coordinates: "C8", piece: "Bishop", color: "black"},
-         {coordinates: "C7", piece: "Pawn", color: "black"},
-         {coordinates: "C6", piece: "", color: ""},
-         {coordinates: "C5", piece: "", color: ""},
-         {coordinates: "C4", piece: "", color: ""},
-         {coordinates: "C3", piece: "", color: ""},
-         {coordinates: "C2", piece: "Pawn", color: "white"},
-         {coordinates: "C1", piece: "Bishop", color: "white"},
-      ],
-      [         
-         {coordinates: "D8", piece: "Queen", color: "black"},
-         {coordinates: "D7", piece: "Pawn", color: "black"},
-         {coordinates: "D6", piece: "", color: ""},
-         {coordinates: "D5", piece: "", color: ""},
-         {coordinates: "D4", piece: "", color: ""},
-         {coordinates: "D3", piece: "", color: ""},
-         {coordinates: "D2", piece: "Pawn", color: "white"},
-         {coordinates: "D1", piece: "Queen", color: "white"},
-      ],
-      [         
-         {coordinates: "E8", piece: "King", color: "black"},
-         {coordinates: "E7", piece: "Pawn", color: "black"},
-         {coordinates: "E6", piece: "", color: ""},
-         {coordinates: "E5", piece: "", color: ""},
-         {coordinates: "E4", piece: "", color: ""},
-         {coordinates: "E3", piece: "", color: ""},
-         {coordinates: "E2", piece: "Pawn", color: "white"},
-         {coordinates: "E1", piece: "King", color: "white"},
-      ],
-      [         
-         {coordinates: "F8", piece: "Bishop", color: "black"},
-         {coordinates: "F7", piece: "Pawn", color: "black"},
-         {coordinates: "F6", piece: "", color: ""},
-         {coordinates: "F5", piece: "", color: ""},
-         {coordinates: "F4", piece: "", color: ""},
-         {coordinates: "F3", piece: "", color: ""},
-         {coordinates: "F2", piece: "Pawn", color: "white"},
-         {coordinates: "F1", piece: "Bishop", color: "white"},
-      ],
-      [         
-         {coordinates: "G8", piece: "Knight", color: "black"},
-         {coordinates: "G7", piece: "Pawn", color: "black"},
-         {coordinates: "G6", piece: "", color: ""},
-         {coordinates: "G5", piece: "", color: ""},
-         {coordinates: "G4", piece: "", color: ""},
-         {coordinates: "G3", piece: "", color: ""},
-         {coordinates: "G2", piece: "Pawn", color: "white"},
-         {coordinates: "G1", piece: "Knight", color: "white"},
-      ],
-      [         
-         {coordinates: "H8", piece: "Rook", color: "black"},
-         {coordinates: "H7", piece: "Pawn", color: "black"},
-         {coordinates: "H6", piece: "", color: ""},
-         {coordinates: "H5", piece: "", color: ""},
-         {coordinates: "H4", piece: "", color: ""},
-         {coordinates: "H3", piece: "", color: ""},
-         {coordinates: "H2", piece: "Pawn", color: "white"},
-         {coordinates: "H1", piece: "Rook", color: "white"},
-      ],
-   ],
    pieceList: [],
    settings: {
       whitePieceColor: "#EAE5CA",
@@ -166,7 +84,7 @@ var pieces = {
                if (compareArrays(pCoords, [posX, posY - 1]))
                   encroacherFound = true;
 
-               if (compareArrStrict(pCoords, [posX, posY - 2]))
+               if (compareArrays(pCoords, [posX, posY - 2]))
                   dEncroacherFound = true;
             }
 
@@ -181,9 +99,9 @@ var pieces = {
                pColor = pieceList[i].color;
                pCoords = pieceList[i].coordinates;
                if (pieceList[i].color == "black") {
-                  if (compareArrStrict(pCoords, [posX - 1, posY - 1]))
+                  if (compareArrays(pCoords, [posX - 1, posY - 1]))
                      list.push([posX - 1, posY - 1]);
-                  if (compareArrStrict(pCoords, [posX + 1, posY - 1]))
+                  if (compareArrays(pCoords, [posX + 1, posY - 1]))
                      list.push([posX + 1, posY - 1]);
 
                   // check en passant
@@ -225,7 +143,7 @@ var pieces = {
          for (var i = posX - 1; i >= 0; i--) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[1] == posY) {
-                  if (validList[j].coordinatesp[0] == i) {
+                  if (validList[j].coordinates[0] == i) {
                      if (validList[j].color != this.color)
                         list.push([i,posY]);
                      foundEncroacher = true;
@@ -245,7 +163,7 @@ var pieces = {
          for (var i = posX + 1; i < 8; i++) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[1] == posY) {
-                  if (validList[j].coordinatesp[0] == i) {
+                  if (validList[j].coordinates[0] == i) {
                      if (validList[j].color != this.color)
                         list.push([i,posY]);
                      foundEncroacher = true;
@@ -265,7 +183,7 @@ var pieces = {
          for (var i = posY - 1; i >= 0; i--) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[0] == posX) {
-                  if (validList[j].coordinatesp[1] == i) {
+                  if (validList[j].coordinates[1] == i) {
                      if (validList[j].color != this.color)
                         list.push([posX,i]);
                      foundEncroacher = true;
@@ -285,7 +203,7 @@ var pieces = {
          for (var i = posY + 1; i < 8; i++) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[0] == posX) {
-                  if (validList[j].coordinatesp[1] == i) {
+                  if (validList[j].coordinates[1] == i) {
                      if (validList[j].color != this.color)
                         list.push([posX,i]);
                      foundEncroacher = true;
@@ -328,7 +246,7 @@ var pieces = {
          for (var i = list.length - 1; i >= 0; i--) {
             if (  list[i][0] < 0
                || list[i][0] > 7
-               || list[i][1] > 0
+               || list[i][1] < 0
                || list[i][1] > 7) {
                   list.splice(i,1);
                }
@@ -573,7 +491,7 @@ var pieces = {
          for (var i = posX - 1; i >= 0; i--) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[1] == posY) {
-                  if (validList[j].coordinatesp[0] == i) {
+                  if (validList[j].coordinates[0] == i) {
                      if (validList[j].color != this.color)
                         list.push([i,posY]);
                      foundEncroacher = true;
@@ -593,7 +511,7 @@ var pieces = {
          for (var i = posX + 1; i < 8; i++) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[1] == posY) {
-                  if (validList[j].coordinatesp[0] == i) {
+                  if (validList[j].coordinates[0] == i) {
                      if (validList[j].color != this.color)
                         list.push([i,posY]);
                      foundEncroacher = true;
@@ -613,7 +531,7 @@ var pieces = {
          for (var i = posY - 1; i >= 0; i--) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[0] == posX) {
-                  if (validList[j].coordinatesp[1] == i) {
+                  if (validList[j].coordinates[1] == i) {
                      if (validList[j].color != this.color)
                         list.push([posX,i]);
                      foundEncroacher = true;
@@ -633,7 +551,7 @@ var pieces = {
          for (var i = posY + 1; i < 8; i++) {
             for (var j = 0; j < validList.length; j++) {
                if (validList[j].coordinates[0] == posX) {
-                  if (validList[j].coordinatesp[1] == i) {
+                  if (validList[j].coordinates[1] == i) {
                      if (validList[j].color != this.color)
                         list.push([posX,i]);
                      foundEncroacher = true;
@@ -976,8 +894,8 @@ var pStrings = {
       King: "<span style=\"color: " + chessController.settings.blackPieceColor
          + "\"><i class=\"fas fa-chess-king\"></i</span>"
    },
-   updateSettings: (x = this) => {
-      pStrings.whitePieces = {
+   updateSettings: function() {
+      this.whitePieces = {
          Pawn: "<span style=\"color: "
             + chessController.settings.whitePieceColor
             + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
@@ -998,7 +916,7 @@ var pStrings = {
             + "\"><i class=\"fas fa-chess-king\"></i</span>"
       };
 
-      pStrings.blackPieces = {
+      this.blackPieces = {
          Pawn: "<span style=\"color: "
             + chessController.settings.blackPieceColor
             + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
@@ -1048,24 +966,31 @@ var coords = {
 }
 
 function updateBoardPieces (layout = chessController.pieceList) {
-   console.log(layout);
    layout.forEach((el)=>{
-      addPiece(coordsToSquare(el.coordinates), el.type, el.color);
+      renderPiece(el.coordinates, el.type, el.color);
    });
 }
 
-function addPiece(sqCoords, piece, color) {
+function renderPiece(sqCoords, piece, color) {
    // sqCoords is strings like:
    //    "A8"
    // or object reference like:
    //    coords.A8
+   // or array coordinates like:
+   //    [4,2]
    // ------------------------
    // piece is string like "Pawn","King","Rook", etc
    // ------------------------
    // color is string "black" or "white" (not color value, but play side)
 
    pStrings.updateSettings();
-   var squareString = "r" + sqCoords[1] + "-file" + sqCoords[0];   
+
+   var squareString = "";
+   if (Array.isArray(sqCoords))
+      squareString = coordsToDomId(sqCoords);
+   else
+      squareString = "r" + sqCoords[1] + "-file" + sqCoords[0];
+
    var square = document.getElementById(squareString);
 
    if (color.toLowerCase() == "white") {
@@ -1165,19 +1090,72 @@ function highLightSquares(squareList = [], color = "#AA0") {
    });
 }
 
-// var ap = {};
-// Object.assign(ap,pieces.Rook);
-// ap.coordinates = [4,4];
+function addPiece(coords = [4,4], type = "Pawn", color = "white") {
+   // start adding new piece
+   var newPiece = {};
 
-// var bp = {};
-// Object.assign(bp,pieces.Queen);
-// bp.color = "white";
-// bp.coordinates = [6,6];
+   switch (type) {
+      case "Pawn":
+         Object.assign(newPiece, pieces.Pawn);
+         break;
+      case "King":
+         Object.assign(newPiece, pieces.King);
+         break;
+      case "Rook":
+         Object.assign(newPiece, pieces.Rook);
+         break;
+      case "Knight":
+         Object.assign(newPiece, pieces.Knight);
+         break;
+      case "Bishop":
+         Object.assign(newPiece, pieces.Bishop);
+         break;
+      case "Queen":
+         Object.assign(newPiece, pieces.Queen);
+         break;
+      default:
+         console.warn("jschess.js: addpiece() cannot find type specified\n"
+                     + "\taborting procedure")
+         return null;
+   }
+   
+   if (Array.isArray(coords)) {
+      newPiece.coords = coords;
+   }
+   else if (typeof(coords) == "string") {
+      coords = squareToCoords(coords);
+      newPiece.coordinates = coords;
+   }
+   else {
+      console.warn("jschess.js: addpiece cannot parse coordinates value\n"
+                  + "\tabortign operation");
+      return null;
+   }
 
-// chessController.pieceList.push(ap);
-// chessController.pieceList.push(bp);
+   newPiece.color = color;
+   
+   // remove any piece already occupying square
+   removePiece(coords);
 
-refreshBoard();
+   chessController.pieceList.push(newPiece);
+
+   updateBoardPieces(chessController.piece);
+}
+
+function removePiece(coords) {
+   var pCoords = [];
+   for (var i = 0; i < chessController.pieceList.length; i++) {
+      pCoords = chessController.pieceList[i].coordinates;
+      if (compareArrays(pCoords,coords)) {
+         var removedPiece = {}
+         Object.assign(removedPiece, chessController.pieceList[i]);
+         chessController.pieceList.splice(i,1);
+         return removedPiece;
+      }
+   }
+
+   return null;
+}
 
 // var foo = [];
 // foo[0] = {};

@@ -68,3 +68,39 @@ function coordsToSquare(coords = [0,0]) {
 
    return fileList[coords[1]] + rankList[coords[0]];
 }
+
+function squareToCoords (square) {
+   if (typeof(square) != "string") {
+      console.warn("algorithms.js: squareToCoords() parameter is not a string\n"
+                  + "\t aborting operation with null value");
+      return null;
+   }
+
+   square = square.toUpperCase()
+
+   if (square.length > 2) {
+      console.warn("algorithms.js: squareToCoords() parameter is incorrect"
+                  + "length\n\taborting operation with null value");
+      return null;
+   }
+
+   if (square[0] < "A"
+      || square[0] > "H"
+      || square[1] < "1"
+      || square[1] > "8") {
+         console.warn("algorithms.js: squareToCoords() parameter out of "
+         + "range\n\taborting operation with null value");
+
+         return null;
+      }
+
+   var fileList = {
+      "A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7
+   }
+
+   var rankList = {
+      "1": 7, "2": 6, "3": 5, "4": 4, "5": 3, "6": 2, "7": 1, "8": 0
+   }
+
+   return [fileList[square[0]], rankList[square[1]]];
+}
