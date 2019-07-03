@@ -97,6 +97,11 @@ var chessController = {
    ply: 0
 }
 
+var threatList = {
+   black: [],
+   white: []
+}
+
 var pieces = {
    Pawn: {
       type: "Pawn",
@@ -118,10 +123,10 @@ var pieces = {
             // check for straight move encroachers
             for (var i = 0; i < pieceList.length; i++) {
                pCoords = pieceList[i].coordinates;
-               if (compArrStrict(pCoords, [posX, posY + 1]))
+               if (compareArrays(pCoords, [posX, posY + 1]))
                   encroacherFound = true;
 
-               if (compArrStrict(pCoords, [posX, posY + 2]))
+               if (compareArrays(pCoords, [posX, posY + 2]))
                   dEncroacherFound = true;
             }
 
@@ -137,9 +142,9 @@ var pieces = {
                pColor = pieceList[i].color;
 
                if (pColor == "white") {
-                  if (compArrStrict(pCoords, [posX - 1, posY + 1]))
+                  if (compareArrays(pCoords, [posX - 1, posY + 1]))
                      list.push([posX - 1, posY + 1]);
-                  if (compArrStrict(pCoords, [posX +1, posY +1]))
+                  if (compareArrays(pCoords, [posX +1, posY +1]))
                      list.push([posX + 1, posY + 1]);
 
                   // check en passant
@@ -158,7 +163,7 @@ var pieces = {
             // check for straight move encroachers
             for (var i = 0; i < pieceList.length; i++) {
                pCoords = pieceList[i].coordinates;
-               if (compArrStrict(pCoords, [posX, posY - 1]))
+               if (compareArrays(pCoords, [posX, posY - 1]))
                   encroacherFound = true;
 
                if (compareArrStrict(pCoords, [posX, posY - 2]))
@@ -201,8 +206,7 @@ var pieces = {
       type: "Rook",
       color: "black",
       coordinates: [0,0],
-      timesMoved: 0,
-      hasCastled: false,
+      hasMoved: false,
       getLegalMoves: function (pieceList = []) {
          var posX = this.coordinates[0];
          var posY = this.coordinates[1];
@@ -334,7 +338,7 @@ var pieces = {
          for (var i = list.length - 1; i >= 0; i--) {
             for (var j = 0; j < pieceList.length; j++) {
                if (pieceList[j].color == this.color
-                  && compArrStrict(pieceList[j].coordinates, list[i]))
+                  && compareArrays(pieceList[j].coordinates, list[i]))
                   list.splice(i,1);
             }
          }
@@ -367,7 +371,7 @@ var pieces = {
             
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
-               if (compArrStrict(sq,pCoords)) {
+               if (compareArrays(sq,pCoords)) {
                   if (validList[j].color != this.color)
                      list.push(sq);
                   foundEncroacher = true;
@@ -389,7 +393,7 @@ var pieces = {
             
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
-               if (compArrStrict(sq,pCoords)) {
+               if (compareArrays(sq,pCoords)) {
                   if (validList[j].color != this.color)
                      list.push(sq);
                   foundEncroacher = true;
@@ -411,7 +415,7 @@ var pieces = {
             
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
-               if (compArrStrict(sq,pCoords)) {
+               if (compareArrays(sq,pCoords)) {
                   if (validList[j].color != this.color)
                      list.push(sq);
                   foundEncroacher = true;
@@ -433,7 +437,7 @@ var pieces = {
             
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
-               if (compArrStrict(sq,pCoords)) {
+               if (compareArrays(sq,pCoords)) {
                   if (validList[j].color != this.color)
                      list.push(sq);
                   foundEncroacher = true;
@@ -484,7 +488,7 @@ var pieces = {
          
          for (var j = 0; j < validList.length; j++) {
             pCoords = validList[j].coordinates;
-            if (compArrStrict(sq,pCoords)) {
+            if (compareArrays(sq,pCoords)) {
                if (validList[j].color != this.color)
                   list.push(sq);
                foundEncroacher = true;
@@ -506,7 +510,7 @@ var pieces = {
          
          for (var j = 0; j < validList.length; j++) {
             pCoords = validList[j].coordinates;
-            if (compArrStrict(sq,pCoords)) {
+            if (compareArrays(sq,pCoords)) {
                if (validList[j].color != this.color)
                   list.push(sq);
                foundEncroacher = true;
@@ -528,7 +532,7 @@ var pieces = {
          
          for (var j = 0; j < validList.length; j++) {
             pCoords = validList[j].coordinates;
-            if (compArrStrict(sq,pCoords)) {
+            if (compareArrays(sq,pCoords)) {
                if (validList[j].color != this.color)
                   list.push(sq);
                foundEncroacher = true;
@@ -550,7 +554,7 @@ var pieces = {
          
          for (var j = 0; j < validList.length; j++) {
             pCoords = validList[j].coordinates;
-            if (compArrStrict(sq,pCoords)) {
+            if (compareArrays(sq,pCoords)) {
                if (validList[j].color != this.color)
                   list.push(sq);
                foundEncroacher = true;
@@ -644,6 +648,301 @@ var pieces = {
          }
 
          return list;
+      }
+   },
+   King: {
+      type: "King",
+      color: "black",
+      coordinates: [0,4],
+      hasCastled: false,
+      getLegalMoves: function (pieceList = []) {
+         var posX = this.coordinates[0];
+         var posY = this.coordinates[1];
+         var pCoords;
+         var validList = [];
+         var foundEncroacher = false;
+         var list = [];         
+         var neighborhood = [
+            [posX - 1, posY - 1],
+            [posX - 1, posY    ],
+            [posX - 1, posY + 1],
+            [posX    , posY - 1],
+            [posX    , posY    ],
+            [posX    , posY + 1],
+            [posX + 1, posY - 1],
+            [posX + 1, posY    ],
+            [posX + 1, posY + 1]
+         ]
+
+         // trim down valid piece list
+         for (var i = 0; i < pieceList.length; i++) {
+            pCoords = pieceList[i].coordinates;
+            if (pCoords[1] == posY
+               || ( Math.abs(pCoords[0] - posX) < 2 
+                  && Math.abs(pCoords[1] - posY) < 2
+                  )
+               )
+               validList.push(pieceList[i]);
+         }
+
+         // check one square move area
+         for (var i = 0; i < neighborhood.length; i++) {
+
+            // check if own pieces block
+            for (var j = 0; j < validList.length; j++) {               
+               pCoords = validList[j].coordinates;
+               if (compareArrays(pCoords,neighborhood[i])
+                  && validList[j].color == this.color)
+                     foundEncroacher = true;
+            }
+
+            // check if would put black king in check
+            if (this.color == "black") {
+               for (var j = 0; j < threatList.white.length; j++) {
+                  pCoords = threatList.white[j];
+                  if (compareArrays(pCoords, neighborhood[i]))
+                     foundEncroacher = true;
+               }
+            }
+
+            // check if would put white king in check
+            if (this.color == "white") {
+               for (var j = 0; j < threatList.black.length; j++) {
+                  pCoords = threatList.white[j];
+                  if (compareArrays(pCoords, neighborhood[i]))
+                     foundEncroacher = true;
+               }
+            }
+
+            if (!foundEncroacher){
+               list.push(neighborhood[i]);
+               foundEncroacher = false;
+            }
+         }
+
+         // castle check
+         var noCastleableRook = true;
+         var pathThreatened = true;
+         var pathEncroached = true;
+         if (!this.hasCastled) {
+            // check for queen-side castle
+            // black castle
+            if (this.color == "black") {
+               for (var i = 0; i < validList.length; i++) {
+                  // find a rook and check if it has moved or castled already
+                  if (validList[i].type == "Rook"
+                  && validList[i].color == this.color
+                  && validList[i].hasMoved == false
+                  && compareArrays(validList[i].coordinates, [0,0])) {
+                     noCastleableRook = false;
+                     break;
+                  }
+               }
+
+               // check if any squares between are under threat
+               for (var j = 0; j < threatList.white.length; j++) {
+                  pCoords = threatList.white[j];
+                  if (compareArrays(pCoords,[0,0])
+                     || compareArrays(pCoords,[1,0])
+                     || compareArrays(pCoords,[2,0])
+                     || compareArrays(pCoords,[3,0])
+                     || compareArrays(pCoords,[4,0]))
+                        break;
+                  
+                  pathThreatened = false;
+               }
+
+               // check if any squares between are already occupied
+               for (var k = 0; k < validList.length; k++) {
+                  pCoords = validList[k].coordinates;
+                  if (compareArrays(pCoords,[1,0])
+                     || compareArrays(pCoords,[2,0])
+                     || compareArrays(pCoords,[3,0]))
+                        break;
+
+                  pathEncroached = false;
+               }
+
+               // if all tests pass, add queen side castle for black
+               if (!noCastleableRook && !pathThreatened && !pathEncroached) {
+                  list.push([0,1]);
+               }
+            }
+            
+            noCastleableRook = true;
+            pathThreatened = true;
+            pathEncroached = true;
+            // white castle
+            if (this.color == "white") {
+               for (var i = 0; i < validList.length; i++) {
+                  // find a rook and check if it has moved or castled already
+                  if (validList[i].type == "Rook"
+                  && validList[i].color == this.color
+                  && validList[i].hasMoved == false
+                  && compareArrays(validList[i].coordinates, [0,7])) {
+                     noCastleableRook = false;
+                     break;
+                  }
+               }
+
+               // check if any squares between are under threat
+               for (var j = 0; j < threatList.black.length; j++) {
+                  pCoords = threatList.black[j];
+                  if (compareArrays(pCoords,[0,7])
+                     || compareArrays(pCoords,[1,7])
+                     || compareArrays(pCoords,[2,7])
+                     || compareArrays(pCoords,[3,7])
+                     || compareArrays(pCoords,[4,7]))
+                        break;
+                  
+                  pathThreatened = false;
+               }
+
+               // check if any squares between are already occupied
+               for (var k = 0; k < validList.length; k++) {
+                  pCoords = validList[k].coordinates;
+                  if (compareArrays(pCoords,[1,7])
+                     || compareArrays(pCoords,[2,7])
+                     || compareArrays(pCoords,[3,7]))
+                        break;
+
+                  pathEncroached = false;
+               }
+
+               // if all tests pass, add queen side castle for black
+               if (!noCastleableRook && !pathThreatened && !pathEncroached) {
+                  list.push([7,1]);
+               }
+            }
+            // check for king-side castle
+            // black castle
+            if (this.color == "black") {
+               for (var i = 0; i < validList.length; i++) {
+                  // find a rook and check if it has moved or castled already
+                  if (validList[i].type == "Rook"
+                  && validList[i].color == this.color
+                  && validList[i].hasMoved == false
+                  && compareArrays(validList[i].coordinates, [7,0])) {
+                     noCastleableRook = false;
+                     break;
+                  }
+               }
+
+               // check if any squares between are under threat
+               for (var j = 0; j < threatList.white.length; j++) {
+                  pCoords = threatList.white[j];
+                  if (compareArrays(pCoords,[4,0])
+                     || compareArrays(pCoords,[5,0])
+                     || compareArrays(pCoords,[6,0])
+                     || compareArrays(pCoords,[7,0]))
+                        break;
+                  
+                  pathThreatened = false;
+               }
+
+               // check if any squares between are already occupied
+               for (var k = 0; k < validList.length; k++) {
+                  pCoords = validList[k].coordinates;
+                  if (compareArrays(pCoords,[5,0])
+                     || compareArrays(pCoords,[6,0]))
+                        break;
+
+                  pathEncroached = false;
+               }
+
+               // if all tests pass, add queen side castle for black
+               if (!noCastleableRook && !pathThreatened && !pathEncroached) {
+                  list.push([0,1]);
+               }
+            }
+            
+            noCastleableRook = true;
+            pathThreatened = true;
+            pathEncroached = true;
+            // white castle
+            if (this.color == "white") {
+               for (var i = 0; i < validList.length; i++) {
+                  // find a rook and check if it has moved or castled already
+                  if (validList[i].type == "Rook"
+                  && validList[i].color == this.color
+                  && validList[i].hasMoved == false
+                  && compareArrays(validList[i].coordinates, [0,7])) {
+                     noCastleableRook = false;
+                     break;
+                  }
+               }
+
+               // check if any squares between are under threat
+               for (var j = 0; j < threatList.black.length; j++) {
+                  pCoords = threatList.black[j];
+                  if (compareArrays(pCoords,[4,7])
+                     || compareArrays(pCoords,[5,7])
+                     || compareArrays(pCoords,[6,7])
+                     || compareArrays(pCoords,[7,7]))
+                        break;
+                  
+                  pathThreatened = false;
+               }
+
+               // check if any squares between are already occupied
+               for (var k = 0; k < validList.length; k++) {
+                  pCoords = validList[k].coordinates;
+                  if (compareArrays(pCoords,[5,7])
+                     || compareArrays(pCoords,[7,7]))
+                        break;
+
+                  pathEncroached = false;
+               }
+
+               // if all tests pass, add queen side castle for black
+               if (!noCastleableRook && !pathThreatened && !pathEncroached) {
+                  list.push([7,1]);
+               }
+            }
+         }
+
+         // check for king-side castle
+         if (!this.hasCastled) {
+            // black castle
+            if (this.color == "black") {
+               for (var i = 0; i < validList.length; i++) {
+                  // find a rook and check if it has moved or castled already
+                  if (validList[i].type == "Rook"
+                  && validList[i].color == this.color
+                  && validList[i].hasMoved == false) {
+                     // check if any squares between are under threat
+                     for (var j = 0; j < threatList.white.length; j++) {
+                        pCoords = threatList.white[j];
+                        if (!compareArrays(pCoords,[0,0])
+                           && !compareArrays(pCoords,[0,1])
+                           && !compareArrays(pCoords,[0,2])
+                           && !compareArrays(pCoords,[0,4]))
+                           list.push([0,1]);
+                     }
+                  }
+               }
+            }
+            // white castle
+            if (this.color == "white") {
+               for (var i = 0; i < validList.length; i++) {
+                  // find a rook and check if it has moved or castled already
+                  if (validList[i].type == "Rook"
+                  && validList[i].color == this.color
+                  && validList[i].hasMoved == false) {
+                     // check if any squares between are under threat
+                     for (var j = 0; j < threatList.black.length; j++) {
+                        pCoords = threatList.black[j];
+                        if (!compareArrays(pCoords,[0,0])
+                           && !compareArrays(pCoords,[0,1])
+                           && !compareArrays(pCoords,[0,2])
+                           && !compareArrays(pCoords,[0,4]))
+                           list.push([7,1]);
+                     }
+                  }
+               }
+            }
+         }
+
       }
    }
 }
