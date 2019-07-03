@@ -947,11 +947,6 @@ var pieces = {
    }
 }
 
-// setup inital board layout
-chessController.pieceList[0] = {};
-Object.assign(chessController.pieceList[0], pieces.Rook);
-chessController.pieceList[1] = {};
-
 var pStrings = {
    whitePieces: {
       Pawn: "<span style=\"color: " + chessController.settings.whitePieceColor
@@ -1052,11 +1047,10 @@ var coords = {
    H5: "H5", H6: "H6", H7: "H7", H8: "H8"
 }
 
-function updateBoardPieces (layout = chessController.squares) {
-   layout.forEach((files)=>{
-      files.forEach((ranks)=>{         
-         addPiece(ranks.coordinates, ranks.piece, ranks.color);
-      })
+function updateBoardPieces (layout = chessController.pieceList) {
+   console.log(layout);
+   layout.forEach((el)=>{
+      addPiece(coordsToSquare(el.coordinates), el.type, el.color);
    });
 }
 
@@ -1127,6 +1121,7 @@ function addPiece(sqCoords, piece, color) {
    square.style.color = "#F00";
 }
 
+// render board color
 function updateBoardSquares (settings = chessController.settings) {
    var darkSquares = document.querySelectorAll(
          ".boardWholeRow:nth-of-type(odd) .square:nth-of-type(even),"
@@ -1170,16 +1165,26 @@ function highLightSquares(squareList = [], color = "#AA0") {
    });
 }
 
+// var ap = {};
+// Object.assign(ap,pieces.Rook);
+// ap.coordinates = [4,4];
+
+// var bp = {};
+// Object.assign(bp,pieces.Queen);
+// bp.color = "white";
+// bp.coordinates = [6,6];
+
+// chessController.pieceList.push(ap);
+// chessController.pieceList.push(bp);
+
 refreshBoard();
 
-var foo = [];
-foo[0] = {};
-Object.assign(foo[0], pieces.Rook);
-foo[0].color = "white";
-foo[0].coordinates = [5,3];
+// var foo = [];
+// foo[0] = {};
+// Object.assign(foo[0], pieces.Rook);
+// foo[0].color = "white";
+// foo[0].coordinates = [5,3];
 
-var bar = {};
-Object.assign(bar, pieces.Queen);
-bar.coordinates = [4,4];
-
-
+// var bar = {};
+// Object.assign(bar, pieces.Queen);
+// bar.coordinates = [4,4];

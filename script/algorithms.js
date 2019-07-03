@@ -61,3 +61,10 @@ function coordsToDomId(coords = [0,0]) {
    //r8-fileA
    return "r" + rankList[coords[1]] + "-file" + fileList[coords[0]];
 }
+
+function coordsToSquare(coords = [0,0]) {
+   var fileList = ["A","B","C","D","E","F","G","H"]
+   var rankList = ["8","7","6","5","4","3","2","1"];
+
+   return fileList[coords[1]] + rankList[coords[0]];
+}
