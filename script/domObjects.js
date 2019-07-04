@@ -1,5 +1,3 @@
-console.log("domObjects.js: connected")
-
 // DOM squares
 var sA8 = document.getElementById("r8-fileA");
 var sB8 = document.getElementById("r8-fileB");
@@ -72,3 +70,5 @@ var sE1 = document.getElementById("r1-fileE");
 var sF1 = document.getElementById("r1-fileF");
 var sG1 = document.getElementById("r1-fileG");
 var sH1 = document.getElementById("r1-fileH");
+
+var btnToggleCoords = document.getElementById("dbCoordToggle");

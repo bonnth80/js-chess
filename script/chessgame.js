@@ -1,7 +1,6 @@
 var c = chessGame();
 
 // setup initial chess board
-c.refreshBoard();
 
 // rank 8
 c.addPiece("A8", "Rook", "black");
@@ -42,3 +41,6 @@ c.addPiece("E1", "King", "white");
 c.addPiece("F1", "Bishop", "white");
 c.addPiece("G1", "Knight", "white");
 c.addPiece("H1", "Rook", "white");
+
+c.updateBoardPieces();
+c.refreshBoard();

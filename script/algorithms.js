@@ -34,12 +34,12 @@ function simplify2d (x,y) {
    if (x == 0 || y == 0)
       return [x,y];
 
-   var gcd = euclidGCD(x,y);
+   var gcd = GCD(x,y);
 
    return [x/gcd, y/gcd];
 }
 
-function euclidGCD(x,y) {
+function GCD(x,y) {
    x = Math.abs(x);
    y = Math.abs(y);
 
@@ -52,7 +52,7 @@ function euclidGCD(x,y) {
    if (y == 0)
       return x;
    else
-      return euclidGCD(y, x % y);
+      return GCD(y, x % y);
 }
 
 function coordsToDomId(coords = [0,0]) {
@@ -88,11 +88,11 @@ function squareToCoords (square) {
       || square[0] > "H"
       || square[1] < "1"
       || square[1] > "8") {
-         console.warn("algorithms.js: squareToCoords() parameter out of "
-         + "range\n\taborting operation with null value");
+      console.warn("algorithms.js: squareToCoords() parameter out of "
+      + "range\n\taborting operation with null value");
 
-         return null;
-      }
+      return null;
+   }
 
    var fileList = {
       "A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7
@@ -103,4 +103,35 @@ function squareToCoords (square) {
    }
 
    return [fileList[square[0]], rankList[square[1]]];
+}
+
+function getSquareColor(coords) {
+   if (Array.isArray(coords)) {
+      var sqVal = coords[0] * 8 + coords[1];
+
+      if (sqVal % 2)
+         return "white";
+      else
+         return "black";
+   }
+   else if (typeof(coords) == "string") {
+      if (/A|C|E|G/.test(coords[0]) && /1|3|5|7/.test(coords[1])
+      || /B|D|F|H/.test(coords[0]) && /2|4|6|8/.test(coords[1])) {
+         return "black"
+      }
+      else if (/A|C|E|G/.test(coords[0]) && /2|4|6|8/.test(coords[1])
+      || /B|D|F|H/.test(coords[0]) && /1|3|5|7/.test(coords[1])) {
+         return "white"
+      }
+   }
+}
+
+function findCoords(list, coords) {
+   var found = false;
+   for (var i = 0; i < list.length; i++) {
+      if (compareArrays(list[i], coords))
+         found = true;
+   }
+
+   return found;
 }

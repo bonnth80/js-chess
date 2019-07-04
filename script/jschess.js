@@ -1,21 +1,39 @@
-console.log("jschess.js: connected")
-
 // ply: an action by a single player wherein they make a play
 // move: a set two plies, wherein each player makes their play
 
 let chessGame = function() {
+
    this.chessController = {
-      pieceList: [],
       settings: {
          whitePieceColor: "#EAE5CA",
          blackPieceColor: "#400",
          whiteSquareColor: "#9898CC",
-         blackSquareColor: "#824848"
+         blackSquareColor: "#824848",
+         activateColor: "#1BD8E6"
       },
+      pieceList: [],
+      legalMove: [],
+      legalCaptures: [],
       move: 0,
       ply: 0,
-      move: "white",
-      moveList: []
+      turnColor: "white",
+      moveList: [],
+      captures: {
+         black: {
+            Pawn: 0,
+            Rook: 0,
+            Knight: 0,
+            Bishop: 0,
+            Queen: 0
+         },
+         white: {
+            Pawn: 0,
+            Rook: 0,
+            Knight: 0,
+            Bishop: 0,
+            Queen: 0
+         }
+      }
    }
 
    this.threatList = {
@@ -29,7 +47,7 @@ let chessGame = function() {
          color: "black",
          coordinates: [0,1],
          moveTwoAtPly: -1,
-         getLegalMoves: function(pieceList = []) {
+         getLegalMoves: function(pieceList = chessController.pieceList) {
             var list = [];
             var posX = this.coordinates[0];
             var posY = this.coordinates[1];
@@ -52,7 +70,7 @@ let chessGame = function() {
                }
 
                if (!encroacherFound){
-                  list.push([posX, 2]);
+                  list.push([posX, posY + 1]);
                   if (firstMove && !dEncroacherFound)
                      list.push([posX, 3]);
                }
@@ -82,6 +100,8 @@ let chessGame = function() {
             }
             else { // pawn is white
                // check for straight move encroachers
+               encroacherFound = false;
+               dEncroacherFound = false;
                for (var i = 0; i < pieceList.length; i++) {
                   pCoords = pieceList[i].coordinates;
                   if (compareArrays(pCoords, [posX, posY - 1]))
@@ -92,7 +112,7 @@ let chessGame = function() {
                }
 
                if (!encroacherFound){
-                  list.push([posX, 5]);
+                  list.push([posX, posY - 1]);
                   if (firstMove && !dEncroacherFound)
                      list.push([posX, 4]);
                }
@@ -128,7 +148,7 @@ let chessGame = function() {
          color: "black",
          coordinates: [0,0],
          hasMoved: false,
-         getLegalMoves: function (pieceList = []) {
+         getLegalMoves: function (pieceList = chessController.pieceList) {
             var posX = this.coordinates[0];
             var posY = this.coordinates[1];
             var validList = [];
@@ -228,7 +248,7 @@ let chessGame = function() {
          color: "black",
          coordinates: [0,0],
          timesMoved: 0,
-         getLegalMoves: function (pieceList = []) {
+         getLegalMoves: function (pieceList = chessController.pieceList) {
             var posX = this.coordinates[0];
             var posY = this.coordinates[1];
 
@@ -272,7 +292,7 @@ let chessGame = function() {
          color: "black",
          coordinates: [0,0],
          timesMoved: 0,
-         getLegalMoves: function(pieceList = []) {
+         getLegalMoves: function(pieceList = chessController.pieceList) {
             var pCoords;
             var foundEncroacher = false;
             var list = [];
@@ -381,7 +401,7 @@ let chessGame = function() {
          color: "black",
          coordinates: [0,0],
          timesMoved: 0,
-         getLegalMoves: function(pieceList = []) {
+         getLegalMoves: function(pieceList = chessController.pieceList) {
             var posX = this.coordinates[0];
             var posY = this.coordinates[1];
             var validList = [];
@@ -576,7 +596,7 @@ let chessGame = function() {
          color: "black",
          coordinates: [0,4],
          hasCastled: false,
-         getLegalMoves: function (pieceList = []) {
+         getLegalMoves: function (pieceList = chessController.pieceList) {
             var posX = this.coordinates[0];
             var posY = this.coordinates[1];
             var pCoords;
@@ -735,6 +755,7 @@ let chessGame = function() {
                      list.push([7,1]);
                   }
                }
+
                // check for king-side castle
                // black castle
                if (this.color == "black") {
@@ -822,93 +843,13 @@ let chessGame = function() {
                }
             }
 
-            // check for king-side castle
-            if (!this.hasCastled) {
-               // black castle
-               if (this.color == "black") {
-                  for (var i = 0; i < validList.length; i++) {
-                     // find a rook and check if it has moved or castled already
-                     if (validList[i].type == "Rook"
-                     && validList[i].color == this.color
-                     && validList[i].hasMoved == false) {
-                        // check if any squares between are under threat
-                        for (var j = 0; j < threatList.white.length; j++) {
-                           pCoords = threatList.white[j];
-                           if (!compareArrays(pCoords,[0,0])
-                              && !compareArrays(pCoords,[0,1])
-                              && !compareArrays(pCoords,[0,2])
-                              && !compareArrays(pCoords,[0,4]))
-                              list.push([0,1]);
-                        }
-                     }
-                  }
-               }
-               // white castle
-               if (this.color == "white") {
-                  for (var i = 0; i < validList.length; i++) {
-                     // find a rook and check if it has moved or castled already
-                     if (validList[i].type == "Rook"
-                     && validList[i].color == this.color
-                     && validList[i].hasMoved == false) {
-                        // check if any squares between are under threat
-                        for (var j = 0; j < threatList.black.length; j++) {
-                           pCoords = threatList.black[j];
-                           if (!compareArrays(pCoords,[0,0])
-                              && !compareArrays(pCoords,[0,1])
-                              && !compareArrays(pCoords,[0,2])
-                              && !compareArrays(pCoords,[0,4]))
-                              list.push([7,1]);
-                        }
-                     }
-                  }
-               }
-            }
-
+            return list;
          }
       }
    }
 
    this.pStrings = {
-      whitePieces: {
-         Pawn: "<span style=\"color: "
-            + chessController.settings.whitePieceColor
-            + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
-         Rook: "<span style=\"color: "
-            + chessController.settings.whitePieceColor
-            + "\"><i class=\"fas fa-chess-rook\"></i></span>",
-         Knight: "<span style=\"color: "
-            + chessController.settings.whitePieceColor
-            + "\"><i class=\"fas fa-chess-knight\"></i></span>",
-         Bishop: "<span style=\"color: "
-            + chessController.settings.whitePieceColor
-            + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
-         Queen: "<span style=\"color: "
-            + chessController.settings.whitePieceColor
-            + "\"><i class=\"fas fa-chess-queen\"></i></span>",
-         King: "<span style=\"color: "
-            + chessController.settings.whitePieceColor
-            + "\"><i class=\"fas fa-chess-king\"></i></span>"
-      },
-      blackPieces: {
-         Pawn: "<span style=\"color: "
-            + chessController.settings.blackPieceColor
-            + "\"><i class=\"fas fa-chess-pawn\"></i></span>",
-         Rook: "<span style=\"color: "
-            + chessController.settings.blackPieceColor
-            + "\"><i class=\"fas fa-chess-rook\"></i></span>",
-         Knight: "<span style=\"color: "
-            + chessController.settings.blackPieceColor
-            + "\"><i class=\"fas fa-chess-knight\"></i></span>",
-         Bishop: "<span style=\"color: "
-            + chessController.settings.blackPieceColor
-            + "\"><i class=\"fas fa-chess-bishop\"></i></span>",
-         Queen: "<span style=\"color: "
-            + chessController.settings.blackPieceColor
-            + "\"><i class=\"fas fa-chess-queen\"></i></span>",
-         King: "<span style=\"color: "
-            + chessController.settings.blackPieceColor
-            + "\"><i class=\"fas fa-chess-king\"></i</span>"
-      },
+      whitePieces: {},
       updateSettings: function() {
          this.whitePieces = {
             Pawn: "<span style=\"color: "
@@ -981,9 +922,18 @@ let chessGame = function() {
    }
 
    this.updateBoardPieces = function (layout = chessController.pieceList) {
+      clearBoardPieces();
       layout.forEach((el)=>{
          renderPiece(el.coordinates, el.type, el.color);
       });
+   }
+
+   this.clearBoardPieces = function () {
+      var doms = document.getElementsByClassName("square");
+
+      for (var i = 0; i < doms.length; i++) {
+         doms[i].innerHTML = "";
+      }
    }
 
    this.renderPiece = function (sqCoords, piece, color) {
@@ -1093,7 +1043,58 @@ let chessGame = function() {
       updateBoardSquares();
    }
 
-   this.activateSquare = function (square) {
+   this.activateSquare = function (domObject, laSquare = null) {
+      // laSquare = last active Square to deactivate 
+      if (laSquare) {
+         var lasColor = getSquareColor(laSquare.getAttribute("squareid"));
+         laSquare.style.backgroundColor =
+            (lasColor == "white")
+            ? chessController.settings.whiteSquareColor
+            : chessController.settings.blackSquareColor;
+      }
+
+      deactivateSquare(domObject);     
+   }
+
+   this.deactivateSquare = function (domObject) {
+      var bgCol = getSquareColor(domObject.getAttribute("squareid"));
+      domObject.style.backgroundColor =
+         (bgCol == "white")
+         ? chessController.settings.whiteSquareColor
+         : chessController.settings.blackSquareColor;
+   }
+
+   this.advanceTurn = function() {
+      if (chessController.turnColor == "white")
+         chessController.turnColor = "black";
+      else
+         chessController.turnColor = "white";
+
+      chessController.ply++;
+
+      chessController.move = Math.floor(chessController.ply / 2);
+
+   }
+
+   this.makeMove = function(origin, destination, specialMove) {
+      // parameters are rank/file string like:
+      //       "D5"
+      // or coordinate array like:
+      //       [3,3]
+      // special moves:
+      //    pawn cap, en passant, pawn promotion, castle qside, castle kside
+      if (typeof(origin) == "string")
+         origin = squareToCoords(origin);
+
+      if (typeof(destination) == "string")
+         destination = squareToCoords(destination);
+      
+      var removedPiece = removePiece(origin);      
+      addPiece(destination,removedPiece.type,removedPiece.color);
+
+      updateBoardPieces();
+
+      advanceTurn();
 
    }
 
@@ -1104,7 +1105,10 @@ let chessGame = function() {
       });
    }
 
-   this.addPiece = function(coords = [4,4], type = "Pawn", color = "white") {
+   this.addPiece = function(coords = [4,4],
+                           type = "Pawn",
+                           color = "white",
+                           updatePieces = false) {
       // start adding new piece
       var newPiece = {};
 
@@ -1134,7 +1138,7 @@ let chessGame = function() {
       }
       
       if (Array.isArray(coords)) {
-         newPiece.coords = coords;
+         newPiece.coordinates = coords;
       }
       else if (typeof(coords) == "string") {
          coords = squareToCoords(coords);
@@ -1146,6 +1150,7 @@ let chessGame = function() {
          return null;
       }
 
+
       newPiece.color = color;
       
       // remove any piece already occupying square
@@ -1153,10 +1158,14 @@ let chessGame = function() {
 
       chessController.pieceList.push(newPiece);
 
-      updateBoardPieces(chessController.piece);
+      if (updatePieces)
+         updateBoardPieces(chessController.piece);
    }
 
-   this.removePiece = function(coords) {
+   this.removePiece = function(coords, updatePieces = false) {
+      if (typeof(coords) == "string")
+         coords = squareToCoords(coords);
+
       var pCoords = [];
       for (var i = 0; i < chessController.pieceList.length; i++) {
          pCoords = chessController.pieceList[i].coordinates;
@@ -1168,9 +1177,30 @@ let chessGame = function() {
          }
       }
 
+      if (updatePieces)
+         updateBoardPieces();
       return null;
    }
 
+   this.getPieceInSquare = function(coords) {
+      if (typeof(coords) == "string") {
+         coords = squareToCoords(coords);
+      }
+
+      var pCoords = [];
+
+      for (var i = 0; i < chessController.pieceList.length; i++) {
+         pCoords = chessController.pieceList[i].coordinates;
+         
+         if (compareArrays(coords, pCoords)) {
+            return chessController.pieceList[i];
+         }
+      }
+
+      return null;
+   }
+
+   //pStrings.updateSettings();
    return this;
 }
 
