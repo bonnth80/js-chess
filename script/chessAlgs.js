@@ -135,3 +135,13 @@ function findCoords(list, coords) {
 
    return found;
 }
+
+function isCoordsOOB(coords) {
+   if (typeof(coords) == "string")
+      coords = squareToCoords(coords);
+
+   return (coords[0] < 0 
+         || coords[0] > 7
+         || coords[1] < 0
+         || coords[1] > 7);
+}

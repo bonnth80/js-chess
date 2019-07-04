@@ -71,7 +71,6 @@ for (var i = 0; i < domSquares.length; i++) {
             } 
             // if square is empty and not part of legal moves
             else if (nPiece == null){
-               console.log("not legal!");
                c.deactivateSquare(this);
                UIController.activeSquare = null;
                c.refreshBoard();

@@ -603,17 +603,47 @@ let chessGame = function() {
             var validList = [];
             var foundEncroacher = false;
             var list = [];         
-            var neighborhood = [
-               [posX - 1, posY - 1],
-               [posX - 1, posY    ],
-               [posX - 1, posY + 1],
-               [posX    , posY - 1],
-               [posX    , posY    ],
-               [posX    , posY + 1],
-               [posX + 1, posY - 1],
-               [posX + 1, posY    ],
-               [posX + 1, posY + 1]
-            ]
+            var neighborhood = [];
+
+            var coordBuffer = [posX - 1, posY - 1];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX - 1, posY    ];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX - 1, posY + 1];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX    , posY - 1];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX    , posY + 1];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX + 1, posY - 1];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX + 1, posY    ];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
+
+            var coordBuffer = [posX + 1, posY + 1];
+            if (!isCoordsOOB(coordBuffer)) {
+               neighborhood.push(coordBuffer);
+            }
 
             // trim down valid piece list
             for (var i = 0; i < pieceList.length; i++) {
@@ -633,16 +663,18 @@ let chessGame = function() {
                for (var j = 0; j < validList.length; j++) {               
                   pCoords = validList[j].coordinates;
                   if (compareArrays(pCoords,neighborhood[i])
-                     && validList[j].color == this.color)
+                     && validList[j].color == this.color){
                         foundEncroacher = true;
+                     }
                }
 
                // check if would put black king in check
                if (this.color == "black") {
                   for (var j = 0; j < threatList.white.length; j++) {
                      pCoords = threatList.white[j];
-                     if (compareArrays(pCoords, neighborhood[i]))
+                     if (compareArrays(pCoords, neighborhood[i])) {
                         foundEncroacher = true;
+                     }
                   }
                }
 
@@ -650,15 +682,17 @@ let chessGame = function() {
                if (this.color == "white") {
                   for (var j = 0; j < threatList.black.length; j++) {
                      pCoords = threatList.white[j];
-                     if (compareArrays(pCoords, neighborhood[i]))
+                     if (compareArrays(pCoords, neighborhood[i])){
                         foundEncroacher = true;
+                     }
                   }
                }
 
                if (!foundEncroacher){
                   list.push(neighborhood[i]);
-                  foundEncroacher = false;
                }
+
+               foundEncroacher = false;
             }
 
             // castle check
@@ -842,7 +876,7 @@ let chessGame = function() {
                   }
                }
             }
-
+            
             return list;
          }
       }
