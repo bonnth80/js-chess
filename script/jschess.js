@@ -5,10 +5,10 @@ let chessGame = function() {
 
    this.chessController = {
       settings: {
-         whitePieceColor: "#EAE5CA",
-         blackPieceColor: "#400",
-         whiteSquareColor: "#9898CC",
-         blackSquareColor: "#824848",
+         whitePieceColor: "#FFF",
+         blackPieceColor: "#000",
+         whiteSquareColor: "#4646FF",
+         blackSquareColor: "#822626",
          activateColor: "#1BD8E6"
       },
       pieceList: [],
@@ -141,6 +141,31 @@ let chessGame = function() {
             }
 
             return list;
+         },
+         getThreatList: function() {
+            var posX = this.coordinates[0];
+            var posY = this.coordinates[1];
+            var tList = [];
+            if (this.color == "black") {
+               if (!isCoordsOOB([posX - 1, posY + 1])) {
+                  tList.push([posX - 1, posY + 1]);
+               }
+               if (!isCoordsOOB([posX + 1, posY + 1])) {
+                  tList.push([posX + 1, posY + 1]);
+               }
+
+               return tList;
+            }
+            else {
+               if (!isCoordsOOB([posX - 1, posY - 1])) {
+                  tList.push([posX - 1, posY - 1]);
+               }
+               if (!isCoordsOOB([posX + 1, posY - 1])) {
+                  tList.push([posX + 1, posY - 1]);
+               }
+
+               return tList;
+            }
          }
       },
       Rook: {
@@ -177,7 +202,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else            
+               else
                   list.push([i,posY]);
             }
 
@@ -197,7 +222,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else               
+               else
                   list.push([i,posY]);
             }
 
@@ -236,13 +261,16 @@ let chessGame = function() {
                }
                if (foundEncroacher)
                   break;
-               else               
+               else
                   list.push([posX,i]);
             }
 
             return list;
+         },
+         getThreatList: function (pieceList = chessController.pieceList) {
+            return this.getLegalMoves(pieceList);
          }
-      },   
+      },
       Knight: {
          type: "Knight",
          color: "black",
@@ -285,6 +313,9 @@ let chessGame = function() {
             }
 
             return list;
+         },
+         getThreatList: function (pieceList = chessController.pieceList) {
+            return this.getLegalMoves(pieceList);
          }
       },
       Bishop: {
@@ -309,7 +340,7 @@ let chessGame = function() {
             for (var sq = [this.coordinates[0] - 1, this.coordinates[1] - 1];
                   sq[0] >= 0 && sq[1] >= 0;
                   sq = addCoords(sq,[-1,-1])) {
-               
+
                for (var j = 0; j < validList.length; j++) {
                   pCoords = validList[j].coordinates;
                   if (compareArrays(sq,pCoords)) {
@@ -322,7 +353,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else            
+               else
                   list.push(sq);
             }
 
@@ -331,7 +362,7 @@ let chessGame = function() {
             for (var sq = [this.coordinates[0] + 1, this.coordinates[1] - 1];
                   sq[0] < 8 && sq[1] >= 0;
                   sq = addCoords(sq,[1, -1])) {
-               
+
                for (var j = 0; j < validList.length; j++) {
                   pCoords = validList[j].coordinates;
                   if (compareArrays(sq,pCoords)) {
@@ -344,7 +375,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else            
+               else
                   list.push(sq);
             }
 
@@ -353,7 +384,7 @@ let chessGame = function() {
             for (var sq = [this.coordinates[0] + 1, this.coordinates[1] + 1];
                   sq[0] < 8 && sq[1] < 8;
                   sq = addCoords(sq,[1, 1])) {
-               
+
                for (var j = 0; j < validList.length; j++) {
                   pCoords = validList[j].coordinates;
                   if (compareArrays(sq,pCoords)) {
@@ -366,7 +397,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else            
+               else
                   list.push(sq);
             }
 
@@ -375,7 +406,7 @@ let chessGame = function() {
             for (var sq = [this.coordinates[0] - 1, this.coordinates[1] + 1];
                   sq[0] >= 0 && sq[1] < 8;
                   sq = addCoords(sq,[-1, 1])) {
-               
+
                for (var j = 0; j < validList.length; j++) {
                   pCoords = validList[j].coordinates;
                   if (compareArrays(sq,pCoords)) {
@@ -388,12 +419,15 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else            
+               else
                   list.push(sq);
             }
 
             return list;
 
+         },
+         getThreatList: function (pieceList = chessController.pieceList) {
+            return this.getLegalMoves(pieceList);
          }
       },
       Queen: {
@@ -426,7 +460,7 @@ let chessGame = function() {
             for (var sq = [this.coordinates[0] - 1, this.coordinates[1] - 1];
                sq[0] >= 0 && sq[1] >= 0;
                sq = addCoords(sq,[-1,-1])) {
-            
+
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
                if (compareArrays(sq,pCoords)) {
@@ -439,7 +473,7 @@ let chessGame = function() {
 
             if (foundEncroacher)
                break;
-            else            
+            else
                list.push(sq);
          }
 
@@ -448,7 +482,7 @@ let chessGame = function() {
          for (var sq = [this.coordinates[0] + 1, this.coordinates[1] - 1];
                sq[0] < 8 && sq[1] >= 0;
                sq = addCoords(sq,[1, -1])) {
-            
+
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
                if (compareArrays(sq,pCoords)) {
@@ -461,7 +495,7 @@ let chessGame = function() {
 
             if (foundEncroacher)
                break;
-            else            
+            else
                list.push(sq);
          }
 
@@ -470,7 +504,7 @@ let chessGame = function() {
          for (var sq = [this.coordinates[0] + 1, this.coordinates[1] + 1];
                sq[0] < 8 && sq[1] < 8;
                sq = addCoords(sq,[1, 1])) {
-            
+
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
                if (compareArrays(sq,pCoords)) {
@@ -483,7 +517,7 @@ let chessGame = function() {
 
             if (foundEncroacher)
                break;
-            else            
+            else
                list.push(sq);
          }
 
@@ -492,7 +526,7 @@ let chessGame = function() {
          for (var sq = [this.coordinates[0] - 1, this.coordinates[1] + 1];
                sq[0] >= 0 && sq[1] < 8;
                sq = addCoords(sq,[-1, 1])) {
-            
+
             for (var j = 0; j < validList.length; j++) {
                pCoords = validList[j].coordinates;
                if (compareArrays(sq,pCoords)) {
@@ -505,7 +539,7 @@ let chessGame = function() {
 
             if (foundEncroacher)
                break;
-            else            
+            else
                list.push(sq);
          }
 
@@ -525,7 +559,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else            
+               else
                   list.push([i,posY]);
             }
 
@@ -545,7 +579,7 @@ let chessGame = function() {
 
                if (foundEncroacher)
                   break;
-               else               
+               else
                   list.push([i,posY]);
             }
 
@@ -584,11 +618,14 @@ let chessGame = function() {
                }
                if (foundEncroacher)
                   break;
-               else               
+               else
                   list.push([posX,i]);
             }
 
             return list;
+         },
+         getThreatList: function (pieceList = chessController.pieceList) {
+            return this.getLegalMoves(pieceList);
          }
       },
       King: {
@@ -602,45 +639,46 @@ let chessGame = function() {
             var pCoords;
             var validList = [];
             var foundEncroacher = false;
-            var list = [];         
+            var list = [];
             var neighborhood = [];
+            var coordBuffer;
 
-            var coordBuffer = [posX - 1, posY - 1];
+            coordBuffer = [posX - 1, posY - 1];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX - 1, posY    ];
+            coordBuffer = [posX - 1, posY    ];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX - 1, posY + 1];
+            coordBuffer = [posX - 1, posY + 1];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX    , posY - 1];
+            coordBuffer = [posX    , posY - 1];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX    , posY + 1];
+            coordBuffer = [posX    , posY + 1];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX + 1, posY - 1];
+            coordBuffer = [posX + 1, posY - 1];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX + 1, posY    ];
+            coordBuffer = [posX + 1, posY    ];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
 
-            var coordBuffer = [posX + 1, posY + 1];
+            coordBuffer = [posX + 1, posY + 1];
             if (!isCoordsOOB(coordBuffer)) {
                neighborhood.push(coordBuffer);
             }
@@ -649,7 +687,7 @@ let chessGame = function() {
             for (var i = 0; i < pieceList.length; i++) {
                pCoords = pieceList[i].coordinates;
                if (pCoords[1] == posY
-                  || ( Math.abs(pCoords[0] - posX) < 2 
+                  || ( Math.abs(pCoords[0] - posX) < 2
                      && Math.abs(pCoords[1] - posY) < 2
                      )
                   )
@@ -660,22 +698,12 @@ let chessGame = function() {
             for (var i = 0; i < neighborhood.length; i++) {
 
                // check if own pieces block
-               for (var j = 0; j < validList.length; j++) {               
+               for (var j = 0; j < validList.length; j++) {
                   pCoords = validList[j].coordinates;
                   if (compareArrays(pCoords,neighborhood[i])
                      && validList[j].color == this.color){
                         foundEncroacher = true;
                      }
-               }
-
-               // check if would put black king in check
-               if (this.color == "black") {
-                  for (var j = 0; j < threatList.white.length; j++) {
-                     pCoords = threatList.white[j];
-                     if (compareArrays(pCoords, neighborhood[i])) {
-                        foundEncroacher = true;
-                     }
-                  }
                }
 
                // check if would put white king in check
@@ -723,7 +751,7 @@ let chessGame = function() {
                         || compareArrays(pCoords,[3,0])
                         || compareArrays(pCoords,[4,0]))
                            break;
-                     
+
                      pathThreatened = false;
                   }
 
@@ -743,7 +771,7 @@ let chessGame = function() {
                      list.push([0,1]);
                   }
                }
-               
+
                noCastleableRook = true;
                pathThreatened = true;
                pathEncroached = true;
@@ -769,7 +797,7 @@ let chessGame = function() {
                         || compareArrays(pCoords,[3,7])
                         || compareArrays(pCoords,[4,7]))
                            break;
-                     
+
                      pathThreatened = false;
                   }
 
@@ -812,7 +840,7 @@ let chessGame = function() {
                         || compareArrays(pCoords,[6,0])
                         || compareArrays(pCoords,[7,0]))
                            break;
-                     
+
                      pathThreatened = false;
                   }
 
@@ -831,7 +859,7 @@ let chessGame = function() {
                      list.push([0,1]);
                   }
                }
-               
+
                noCastleableRook = true;
                pathThreatened = true;
                pathEncroached = true;
@@ -856,7 +884,7 @@ let chessGame = function() {
                         || compareArrays(pCoords,[6,7])
                         || compareArrays(pCoords,[7,7]))
                            break;
-                     
+
                      pathThreatened = false;
                   }
 
@@ -876,8 +904,11 @@ let chessGame = function() {
                   }
                }
             }
-            
+
             return list;
+         },
+         getThreatList: function (pieceList = chessController.pieceList) {
+            return this.getLegalMoves(pieceList);
          }
       }
    }
@@ -935,22 +966,22 @@ let chessGame = function() {
 
       B1: "B1", B2: "B2", B3: "B3", B4: "B4",
       B5: "B5", B6: "B6", B7: "B7", B8: "B8",
-      
+
       C1: "C1", C2: "C2", C3: "C3", C4: "C4",
       C5: "C5", C6: "C6", C7: "C7", C8: "C8",
-      
+
       D1: "D1", D2: "D2", D3: "D3", D4: "D4",
       D5: "D5", D6: "D6", D7: "D7", D8: "D8",
-      
+
       E1: "E1", E2: "E2", E3: "E3", E4: "E4",
       E5: "E5", E6: "E6", E7: "E7", E8: "E8",
-      
+
       F1: "F1", F2: "F2", F3: "F3", F4: "F4",
       F5: "F5", F6: "F6", F7: "F7", F8: "F8",
-      
+
       G1: "G1", G2: "G2", G3: "G3", G4: "G4",
       G5: "G5", G6: "G6", G7: "G7", G8: "G8",
-      
+
       H1: "H1", H2: "H2", H3: "H3", H4: "H4",
       H5: "H5", H6: "H6", H7: "H7", H8: "H8"
    }
@@ -1078,7 +1109,7 @@ let chessGame = function() {
    }
 
    this.activateSquare = function (domObject, laSquare = null) {
-      // laSquare = last active Square to deactivate 
+      // laSquare = last active Square to deactivate
       if (laSquare) {
          var lasColor = getSquareColor(laSquare.getAttribute("squareid"));
          laSquare.style.backgroundColor =
@@ -1087,7 +1118,7 @@ let chessGame = function() {
             : chessController.settings.blackSquareColor;
       }
 
-      deactivateSquare(domObject);     
+      deactivateSquare(domObject);
    }
 
    this.deactivateSquare = function (domObject) {
@@ -1122,14 +1153,35 @@ let chessGame = function() {
 
       if (typeof(destination) == "string")
          destination = squareToCoords(destination);
-      
-      var removedPiece = removePiece(origin);      
+
+      var removedPiece = removePiece(origin);
       addPiece(destination,removedPiece.type,removedPiece.color);
 
       updateBoardPieces();
 
       advanceTurn();
+   }
 
+   this.simulateMove = function(origin, destination) {
+      // parameters are rank/file string like:
+      //       "D5"
+      // or coordinate array like:
+      //       [3,3]
+      // special moves:
+      //    pawn cap, en passant, pawn promotion, castle qside, castle kside
+      if (typeof(origin) == "string")
+         origin = squareToCoords(origin);
+
+      if (typeof(destination) == "string")
+         destination = squareToCoords(destination);
+
+      var simPieceList = [];
+      Object.assign(simPieceList, chessController.pieceList);
+
+      var removedPiece = removePiece(origin, simPieceList);
+      addPiece(destination,removedPiece.type,removedPiece.color, simPieceList);
+
+      return simPieceList;
    }
 
    this.highLightSquares = function(squareList = [], color = "#AA0") {
@@ -1139,9 +1191,26 @@ let chessGame = function() {
       });
    }
 
+   this.getBoardThreats = function(pieceList = chessController.pieceList,
+                                    color = "white") {
+      // get all squares that are threatened by pieces of color parameter
+      var threatList = [];
+      var pieceThreats;
+      console.log("Checking threats from: " + color);
+      for (var i = 0; i < pieceList.length; i++) {
+         if (pieceList[i].color == color) {
+            pieceThreats = pieceList[i].getThreatList(pieceList);
+            threatList = threatList.concat(pieceThreats);
+         }
+      }
+
+      return threatList;
+   }
+
    this.addPiece = function(coords = [4,4],
                            type = "Pawn",
                            color = "white",
+                           pieceList = chessController.pieceList,
                            updatePieces = false) {
       // start adding new piece
       var newPiece = {};
@@ -1170,7 +1239,7 @@ let chessGame = function() {
                         + "\taborting procedure")
             return null;
       }
-      
+
       if (Array.isArray(coords)) {
          newPiece.coordinates = coords;
       }
@@ -1186,33 +1255,35 @@ let chessGame = function() {
 
 
       newPiece.color = color;
-      
+
       // remove any piece already occupying square
       removePiece(coords);
 
-      chessController.pieceList.push(newPiece);
+      pieceList.push(newPiece);
 
       if (updatePieces)
-         updateBoardPieces(chessController.piece);
+         updateBoardPieces(pieceList);
    }
 
-   this.removePiece = function(coords, updatePieces = false) {
+   this.removePiece = function(coords,
+                              pieceList = chessController.pieceList,
+                              updatePieces = false) {
       if (typeof(coords) == "string")
          coords = squareToCoords(coords);
 
       var pCoords = [];
-      for (var i = 0; i < chessController.pieceList.length; i++) {
-         pCoords = chessController.pieceList[i].coordinates;
+      for (var i = 0; i < pieceList.length; i++) {
+         pCoords = pieceList[i].coordinates;
          if (compareArrays(pCoords,coords)) {
             var removedPiece = {}
-            Object.assign(removedPiece, chessController.pieceList[i]);
-            chessController.pieceList.splice(i,1);
+            Object.assign(removedPiece, pieceList[i]);
+            pieceList.splice(i,1);
             return removedPiece;
          }
       }
 
       if (updatePieces)
-         updateBoardPieces();
+         updateBoardPieces(pieceList);
       return null;
    }
 
@@ -1225,7 +1296,7 @@ let chessGame = function() {
 
       for (var i = 0; i < chessController.pieceList.length; i++) {
          pCoords = chessController.pieceList[i].coordinates;
-         
+
          if (compareArrays(coords, pCoords)) {
             return chessController.pieceList[i];
          }

@@ -10,11 +10,16 @@ var UIController = {
 //    if a previous square is selected
 //       if the previous is this turn's color
 //          if square is part of legal moves
-//             move active square's piece to new square
-//             unselect/deactivate current active square
-//             set turn to opposite color (handled in move)
-//             increment ply (handled in move)
-//             set move to ply / 2 (handled in move)
+//             if move would put this turn's king in check
+//                warn user maybe
+//                unselect/deactivate current active square
+//                set previous to null
+//             if move is safe for this turn's king
+//                move active square's piece to new square
+//                unselect/deactivate current active square
+//                set turn to opposite color (handled in move)
+//                increment ply (handled in move)
+//                set move to ply / 2 (handled in move)
 //          if square is empty and not part of legal moves
 //             unselect/deactivate current active square
 //             set previous to null
@@ -38,13 +43,13 @@ var UIController = {
 //          then there was nothing selected and you clicked on nothing
 //          so do nothing, this selection not included
 
-for (var i = 0; i < domSquares.length; i++) {   
+for (var i = 0; i < domSquares.length; i++) {
    domSquares[i].addEventListener("click", function () {
       // When square is clicked
       var nCoords = squareToCoords(this.getAttribute("squareID"));
       var nPiece = c.getPieceInSquare(nCoords);
       var nColor = (nPiece) ? nPiece.color : null;
-      
+
       if(UIController.activeSquare) {
          var aSquare = UIController.activeSquare;
          var aCoords = aSquare.getAttribute("squareID");
@@ -56,28 +61,53 @@ for (var i = 0; i < domSquares.length; i++) {
          var aPiece = null;
          var aColor = null;
       }
-      
+
       // if a previous piece is selected
-      if (aSquare) {         
+      if (aSquare) {
+
          // if the previous is this turn's color
          if (aColor == c.chessController.turnColor) {
             var legalMoves = aPiece.getLegalMoves();
 
             // if the square is part of legal moves
             if (findCoords(legalMoves,nCoords)){
-               c.makeMove(aCoords,nCoords);
-               c.deactivateSquare(this);
-               c.refreshBoard();
-            } 
+
+               // if move would put this turn's king in check
+               var simNextMove = c.simulateMove(aCoords,nCoords);
+               var enemyThreats = c.getBoardThreats(simNextMove,oppCol(aColor));
+               var kingCoords = []; // find the king
+               for (var i = 0; i < simNextMove.length; i++) {
+                  if (simNextMove[i].type == "King"
+                  && simNextMove[i].color == c.chessController.turnColor)
+                     kingCoords = simNextMove[i].coordinates;
+               }
+               console.log("::::::::::" + kingCoords);
+               if (findCoords(enemyThreats,kingCoords)) {
+                  console.log("This move would put your king in check!");
+                  c.deactivateSquare(this);
+                  UIController.activeSquare = null;
+                  c.refreshBoard();
+               }
+
+               // if move is safe for this turn's king
+               else {
+                  c.makeMove(aCoords,nCoords);
+                  c.deactivateSquare(this);
+                  c.refreshBoard();
+               }
+            }
+
             // if square is empty and not part of legal moves
             else if (nPiece == null){
                c.deactivateSquare(this);
                UIController.activeSquare = null;
                c.refreshBoard();
             }
+
             // if square is another piece
             else {
                c.activateSquare(this,aSquare);
+
                // if new square has a piece of this turn's color
                if (nColor == c.chessController.turnColor) {
                   var lMoves = nPiece.getLegalMoves();
@@ -86,6 +116,7 @@ for (var i = 0; i < domSquares.length; i++) {
                }
             }
          }
+
          // if the previous piece is opposite of this turn's color
          else {
             if (nPiece == null) {
@@ -98,8 +129,9 @@ for (var i = 0; i < domSquares.length; i++) {
                   c.highLightSquares(nPiece.getLegalMoves());
                }
             }
-         }      
+         }
       }
+
       // if no previous square selected
       else if (aSquare == null) {
          c.activateSquare(this);
@@ -108,7 +140,7 @@ for (var i = 0; i < domSquares.length; i++) {
          }
       }
       UIController.activeSquare = this;
-      
+
 
    });
 }

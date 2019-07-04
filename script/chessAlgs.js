@@ -140,8 +140,15 @@ function isCoordsOOB(coords) {
    if (typeof(coords) == "string")
       coords = squareToCoords(coords);
 
-   return (coords[0] < 0 
+   return (coords[0] < 0
          || coords[0] > 7
          || coords[1] < 0
          || coords[1] > 7);
+}
+
+function oppCol(color) {
+   if (color == "white")
+      return "black";
+   else
+      return "white";
 }
