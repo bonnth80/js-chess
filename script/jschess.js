@@ -12,12 +12,9 @@ let chessGame = function() {
          activateColor: "#1BD8E6"
       },
       pieceList: [],
-      legalMove: [],
-      legalCaptures: [],
       move: 0,
       ply: 0,
       turnColor: "white",
-      moveList: [],
       captures: {
          black: {
             Pawn: 0,

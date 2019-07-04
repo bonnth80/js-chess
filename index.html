@@ -11,130 +11,146 @@
 </head>
 <body>
    <h1>js chess demo</h1>
+   <div id="disp">
+      <div id="gameField">
+         <table id="chessBoard">
+            <tr id="rowLables">
+               <td class="tlBlank"></td>
+               <td class="boardFile coordLabel"><span class="anLabel">A</span><span class="cartLabel">0</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">B</span><span class="cartLabel">1</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">C</span><span class="cartLabel">2</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">D</span><span class="cartLabel">3</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">E</span><span class="cartLabel">4</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">F</span><span class="cartLabel">5</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">G</span><span class="cartLabel">6</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">H</span><span class="cartLabel">7</span></td>
+               <td class="trBlank"></td>
+            </tr>
+            <tr id="row8" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">8</span><span class="cartLabel">0</span></td>
+               <td class="square boardRow boardFile" squareID="A8" id="r8-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B8" id="r8-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C8" id="r8-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D8" id="r8-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E8" id="r8-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F8" id="r8-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G8" id="r8-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H8" id="r8-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">8</span><span class="cartLabel">0</span></td>
+            </tr>
+            <tr id="row7" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">7</span><span class="cartLabel">1</span></td>
+               <td class="square boardRow boardFile" squareID="A7" id="r7-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B7" id="r7-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C7" id="r7-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D7" id="r7-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E7" id="r7-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F7" id="r7-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G7" id="r7-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H7" id="r7-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">7</span><span class="cartLabel">1</span></td>
+            </tr>
+            <tr id="row6" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">6</span><span class="cartLabel">2</span></td>
+               <td class="square boardRow boardFile" squareID="A6" id="r6-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B6" id="r6-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C6" id="r6-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D6" id="r6-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E6" id="r6-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F6" id="r6-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G6" id="r6-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H6" id="r6-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">6</span><span class="cartLabel">2</span></td>
+            </tr>
+            <tr id="row5" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">5</span><span class="cartLabel">3</span></td>
+               <td class="square boardRow boardFile" squareID="A5" id="r5-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B5" id="r5-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C5" id="r5-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D5" id="r5-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E5" id="r5-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F5" id="r5-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G5" id="r5-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H5" id="r5-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">5</span><span class="cartLabel">3</span></td>
+            </tr>
+            <tr id="row4" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">4</span><span class="cartLabel">4</span></td>
+               <td class="square boardRow boardFile" squareID="A4" id="r4-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B4" id="r4-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C4" id="r4-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D4" id="r4-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E4" id="r4-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F4" id="r4-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G4" id="r4-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H4" id="r4-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">4</span><span class="cartLabel">4</span></td>
+            </tr>
+            <tr id="row3" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">3</span><span class="cartLabel">5</span></td>
+               <td class="square boardRow boardFile" squareID="A3" id="r3-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B3" id="r3-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C3" id="r3-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D3" id="r3-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E3" id="r3-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F3" id="r3-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G3" id="r3-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H3" id="r3-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">3</span><span class="cartLabel">5</span></td>
+            </tr>
+            <tr id="row2" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">2</span><span class="cartLabel">6</span></td>
+               <td class="square boardRow boardFile" squareID="A2" id="r2-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B2" id="r2-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C2" id="r2-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D2" id="r2-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E2" id="r2-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F2" id="r2-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G2" id="r2-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H2" id="r2-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">2</span><span class="cartLabel">6</span></td>
+            </tr>
+            <tr id="row1" class="boardWholeRow">
+               <td class="coordLabel boardRow"><span class="anLabel">1</span><span class="cartLabel">7</span></td>
+               <td class="square boardRow boardFile" squareID="A1" id="r1-fileA"></td>
+               <td class="square boardRow boardFile" squareID="B1" id="r1-fileB"></td>
+               <td class="square boardRow boardFile" squareID="C1" id="r1-fileC"></td>
+               <td class="square boardRow boardFile" squareID="D1" id="r1-fileD"></td>
+               <td class="square boardRow boardFile" squareID="E1" id="r1-fileE"></td>
+               <td class="square boardRow boardFile" squareID="F1" id="r1-fileF"></td>
+               <td class="square boardRow boardFile" squareID="G1" id="r1-fileG"></td>
+               <td class="square boardRow boardFile" squareID="H1" id="r1-fileH"></td>
+               <td class="coordLabel boardRow"><span class="anLabel">1</span><span class="cartLabel">7</span></td>
+            </tr>
+            <tr id="rowLables">
+               <td class="tlBlank"></td>
+               <td class="boardFile coordLabel"><span class="anLabel">A</span><span class="cartLabel">0</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">B</span><span class="cartLabel">1</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">C</span><span class="cartLabel">2</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">D</span><span class="cartLabel">3</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">E</span><span class="cartLabel">4</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">F</span><span class="cartLabel">5</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">G</span><span class="cartLabel">6</span></td>
+               <td class="boardFile coordLabel"><span class="anLabel">H</span><span class="cartLabel">7</span></td>
+               <td class="trBlank"></td>
+            </tr>
+         </table>
+         <div id="moveInfo">
+            <table id="moveList">
+                  <tr id="mlHeading">
+                     <td></td>
+                     <td class="mlWhite">White</td>
+                     <td class="mlBlack">Black</td>
+                  </tr>
+               <tr>
+                  <td class="moveNum">1.</td>
+                  <td class="moveSymbol">e4</td>
+                  <td class="moveSymbol">Bf6++</td>
+               </tr>
+            </table>
+         </div>
+   </div>
 
-   <div id="chessBoard">
-      <table>
-         <tr id="rowLables">
-            <td class="tlBlank"></td>
-            <td class="boardFile coordLabel"><span class="anLabel">A</span><span class="cartLabel">0</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">B</span><span class="cartLabel">1</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">C</span><span class="cartLabel">2</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">D</span><span class="cartLabel">3</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">E</span><span class="cartLabel">4</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">F</span><span class="cartLabel">5</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">G</span><span class="cartLabel">6</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">H</span><span class="cartLabel">7</span></td>
-            <td class="trBlank"></td>
-         </tr>
-         <tr id="row8" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">8</span><span class="cartLabel">0</span></td>
-            <td class="square boardRow boardFile" squareID="A8" id="r8-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B8" id="r8-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C8" id="r8-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D8" id="r8-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E8" id="r8-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F8" id="r8-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G8" id="r8-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H8" id="r8-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">8</span><span class="cartLabel">0</span></td>
-         </tr>
-         <tr id="row7" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">7</span><span class="cartLabel">1</span></td>
-            <td class="square boardRow boardFile" squareID="A7" id="r7-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B7" id="r7-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C7" id="r7-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D7" id="r7-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E7" id="r7-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F7" id="r7-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G7" id="r7-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H7" id="r7-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">7</span><span class="cartLabel">1</span></td>
-         </tr>
-         <tr id="row6" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">6</span><span class="cartLabel">2</span></td>
-            <td class="square boardRow boardFile" squareID="A6" id="r6-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B6" id="r6-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C6" id="r6-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D6" id="r6-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E6" id="r6-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F6" id="r6-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G6" id="r6-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H6" id="r6-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">6</span><span class="cartLabel">2</span></td>
-         </tr>
-         <tr id="row5" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">5</span><span class="cartLabel">3</span></td>
-            <td class="square boardRow boardFile" squareID="A5" id="r5-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B5" id="r5-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C5" id="r5-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D5" id="r5-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E5" id="r5-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F5" id="r5-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G5" id="r5-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H5" id="r5-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">5</span><span class="cartLabel">3</span></td>
-         </tr>
-         <tr id="row4" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">4</span><span class="cartLabel">4</span></td>
-            <td class="square boardRow boardFile" squareID="A4" id="r4-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B4" id="r4-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C4" id="r4-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D4" id="r4-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E4" id="r4-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F4" id="r4-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G4" id="r4-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H4" id="r4-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">4</span><span class="cartLabel">4</span></td>
-         </tr>
-         <tr id="row3" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">3</span><span class="cartLabel">5</span></td>
-            <td class="square boardRow boardFile" squareID="A3" id="r3-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B3" id="r3-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C3" id="r3-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D3" id="r3-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E3" id="r3-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F3" id="r3-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G3" id="r3-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H3" id="r3-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">3</span><span class="cartLabel">5</span></td>
-         </tr>
-         <tr id="row2" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">2</span><span class="cartLabel">6</span></td>
-            <td class="square boardRow boardFile" squareID="A2" id="r2-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B2" id="r2-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C2" id="r2-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D2" id="r2-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E2" id="r2-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F2" id="r2-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G2" id="r2-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H2" id="r2-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">2</span><span class="cartLabel">6</span></td>
-         </tr>
-         <tr id="row1" class="boardWholeRow">
-            <td class="coordLabel boardRow"><span class="anLabel">1</span><span class="cartLabel">7</span></td>
-            <td class="square boardRow boardFile" squareID="A1" id="r1-fileA"></td>
-            <td class="square boardRow boardFile" squareID="B1" id="r1-fileB"></td>
-            <td class="square boardRow boardFile" squareID="C1" id="r1-fileC"></td>
-            <td class="square boardRow boardFile" squareID="D1" id="r1-fileD"></td>
-            <td class="square boardRow boardFile" squareID="E1" id="r1-fileE"></td>
-            <td class="square boardRow boardFile" squareID="F1" id="r1-fileF"></td>
-            <td class="square boardRow boardFile" squareID="G1" id="r1-fileG"></td>
-            <td class="square boardRow boardFile" squareID="H1" id="r1-fileH"></td>
-            <td class="coordLabel boardRow"><span class="anLabel">1</span><span class="cartLabel">7</span></td>
-         </tr>
-         <tr id="rowLables">
-            <td class="tlBlank"></td>
-            <td class="boardFile coordLabel"><span class="anLabel">A</span><span class="cartLabel">0</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">B</span><span class="cartLabel">1</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">C</span><span class="cartLabel">2</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">D</span><span class="cartLabel">3</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">E</span><span class="cartLabel">4</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">F</span><span class="cartLabel">5</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">G</span><span class="cartLabel">6</span></td>
-            <td class="boardFile coordLabel"><span class="anLabel">H</span><span class="cartLabel">7</span></td>
-            <td class="trBlank"></td>
-         </tr>
-      </table>
    </div>
    <div id="controls">
       <button id="dbCoordToggle">Coord Type</button>
@@ -142,7 +158,7 @@
    <div id="debugSquare">
 
    </div>
-   
+
    <script src="script/chessAlgs.js"></script>
    <script src="script/domObjects.js"></script>
    <script src="script/jschess.js"></script>
