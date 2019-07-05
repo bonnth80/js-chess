@@ -42,5 +42,7 @@ c.addPiece("F1", "Bishop", "white");
 c.addPiece("G1", "Knight", "white");
 c.addPiece("H1", "Rook", "white");
 
+
+
 c.updateBoardPieces();
 c.refreshBoard();

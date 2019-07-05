@@ -135,12 +135,12 @@ for (var i = 0; i < domSquares.length; i++) {
       // if no previous square selected
       else if (aSquare == null) {
          c.activateSquare(this);
-         if (nPiece.color = c.chessController.turnColor) {
+         if (nPiece.color == c.chessController.turnColor) {
             c.highLightSquares(nPiece.getLegalMoves());
          }
       }
-      UIController.activeSquare = this;
 
+      UIController.activeSquare = this;
 
    });
 }

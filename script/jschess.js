@@ -7,11 +7,13 @@ let chessGame = function() {
       settings: {
          whitePieceColor: "#FFF",
          blackPieceColor: "#000",
-         whiteSquareColor: "#4646FF",
-         blackSquareColor: "#822626",
+         whiteSquareColor: "#4450FF",
+         blackSquareColor: "#AA2626",
          activateColor: "#1BD8E6"
       },
       pieceList: [],
+      blackCheck: false,
+      whiteCheck: false,
       move: 0,
       ply: 0,
       turnColor: "white",
@@ -1254,7 +1256,7 @@ let chessGame = function() {
       newPiece.color = color;
 
       // remove any piece already occupying square
-      removePiece(coords);
+      removePiece(coords, pieceList);
 
       pieceList.push(newPiece);
 
