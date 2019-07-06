@@ -7,8 +7,8 @@ let chessGame = function() {
       settings: {
          whitePieceColor: "#FFF",
          blackPieceColor: "#000",
-         whiteSquareColor: "#4450FF",
-         blackSquareColor: "#AA2626",
+         whiteSquareColor: "#DDCCCC",
+         blackSquareColor: "#AA8888",
          activateColor: "#1BD8E6"
       },
       pieceList: [],
@@ -187,6 +187,7 @@ let chessGame = function() {
             }
 
             // check left squares and add squares
+            foundEncroacher = false;
             for (var i = posX - 1; i >= 0; i--) {
                for (var j = 0; j < validList.length; j++) {
                   if (validList[j].coordinates[1] == posY) {
@@ -544,6 +545,7 @@ let chessGame = function() {
 
          // Lateral
          // check left squares
+         foundEncroacher = false;
             for (var i = posX - 1; i >= 0; i--) {
                for (var j = 0; j < validList.length; j++) {
                   if (validList[j].coordinates[1] == posY) {
@@ -1195,7 +1197,6 @@ let chessGame = function() {
       // get all squares that are threatened by pieces of color parameter
       var threatList = [];
       var pieceThreats;
-      console.log("Checking threats from: " + color);
       for (var i = 0; i < pieceList.length; i++) {
          if (pieceList[i].color == color) {
             pieceThreats = pieceList[i].getThreatList(pieceList);
@@ -1251,7 +1252,6 @@ let chessGame = function() {
                      + "\tabortign operation");
          return null;
       }
-
 
       newPiece.color = color;
 

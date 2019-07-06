@@ -81,7 +81,6 @@ for (var i = 0; i < domSquares.length; i++) {
                   && simNextMove[i].color == c.chessController.turnColor)
                      kingCoords = simNextMove[i].coordinates;
                }
-               console.log("::::::::::" + kingCoords);
                if (findCoords(enemyThreats,kingCoords)) {
                   console.log("This move would put your king in check!");
                   c.deactivateSquare(this);
